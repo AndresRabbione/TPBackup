@@ -1,0 +1,11 @@
+@startuml Planta Nuclear
+
+class ReactorNuclear {
+}
+
+'Homero? u Operador?
+class Operador { 
+}
+
+
+@enduml
