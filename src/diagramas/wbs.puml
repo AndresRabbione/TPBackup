@@ -1,0 +1,14 @@
+@startwbs Seguimiento del Trabajo
+
+* Trabajo Practico
+ * Diagrama de Clases
+  * Diagrama de secuencia 1
+  * Diagrama de secuencia 2
+ *[#LightGreen] Repositorio
+ * Análisis
+ * Diseño
+  * Codificación
+   * Código
+   * Pruebas Unitarias
+
+@endwbs
