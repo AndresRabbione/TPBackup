@@ -1,4 +1,5 @@
 @startuml Planta Nuclear
+title Diagrama de Clases - Planta Nuclear
 
 class ReactorNuclear {
 }
