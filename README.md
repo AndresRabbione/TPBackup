@@ -1,6 +1,6 @@
 READ ME
 
-Este grupo está integrado por Dario Zagarzazu, Francesca Massollo y Claudia Canta.
+Este grupo está integrado por Dario Zagarzazu, Francesca Massollo, Claudia Canta y Andres Rabbione.
 
 FASE 1:
 
