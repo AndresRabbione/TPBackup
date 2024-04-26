@@ -6,4 +6,4 @@ FASE 1:
 
 *Explicación sobre el enunciado y nuestro desarrollo inicial*
 
-Instrucciones para compilacipon: 
+Instrucciones para compilación: 
