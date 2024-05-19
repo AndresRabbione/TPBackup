@@ -1,12 +1,123 @@
 @startuml Planta Nuclear
 title Diagrama de Clases - Planta Nuclear
 
+class PlantaNuclear {
+    + reactor : ReactorNuclear
+    + operador : Operador
+    + turbinas : Turbina
+}
+
 class ReactorNuclear {
+    + energiaGenerada : number
+    + temperatura : number
+    + estado : EstadoReactor
+    + horasEncendido : number
+    + barrasDeControl : BarraDeControl[]
+    + sensor : Sensor
+    + notificador : Notificador
+    + generadorE : GeneradorDeEnergia
+
+    + iniciarReactor()
+    + pararReactor()
+    + disminuirTemperatura() 'temperatura - temperatura * %'
 }
 
-'Homero? u Operador?
-class Operador { 
+class Operador {
+    + nombre : String
+
+    + insertarBarra(ReactorNuclear) : BarraDeControl[]
+    + recibirAlerta( Error )
+    + activarProtocolo ( Protocolo )
 }
 
+interface Protocolo { 
+}
+
+class Sensor {
+
+    + verificarTemperatura() : number
+}
+
+class Turbina {
+
+}
+
+class BarraDeControl {
+    + tiempoDeVidaUtil : number
+    
+
+    + calcularPorcentaje(tiempoDeVida) : number
+}
+
+exception SituacionCritica {
+    + exception
+}
+
+class Notificador {
+
+    + enviarNotificacion() 
+}
+
+class GeneradorDeEnergia {
+    + energiaNeta : number
+    + constantes : Constantes
+    
+    + calcularEnergia() : number
+}
+
+class GeneradorDeVapor {
+
+}
+
+class TorreDeRefrigeracion{
+
+}
+
+class Condensador {
+
+}
+
+enum Constantes {
+    + maxTemperatura : 400
+    + temperaturaAlerta : 330
+    + capacidadMaxReactor : 700
+    + minTemperatura : 280
+    + tablaEnergiaTer[]
+    + tablaEnergiaNeta[]
+    + tablaTemperatura[]
+}
+
+enum EstadoReactor {
+    Apagado
+    Encendido
+}
+
+enum TemperaturaReactor {
+    Normal
+    Moderado
+    Crítico
+}
+
+PlantaNuclear o-- Operador
+PlantaNuclear *-- ReactorNuclear
+PlantaNuclear *-- Turbina
+PlantaNuclear *-- GeneradorDeVapor
+PlantaNuclear *--  TorreDeRefrigeracion
+PlantaNuclear *--  Condensador
+
+ReactorNuclear o-- EstadoReactor
+ReactorNuclear *-- Sensor
+ReactorNuclear *-- Notificador
+ReactorNuclear *-- GeneradorDeEnergia
+ReactorNuclear o-- BarraDeControl
+ReactorNuclear --> TemperaturaReactor
+
+Operador --> Protocolo
+Sensor --> SituacionCritica
+GeneradorDeEnergia --> Constantes
+
+
+
+'Preguntas: ¿Como aumenta la temperatura del reactor? ¿Sola? ¿Lo simulamos?
 
 @enduml
