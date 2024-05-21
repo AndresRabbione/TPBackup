@@ -1,15 +1,19 @@
-import Operador from "./operador";
+import {
+  maxTemperatura,
+  minTemperatuta,
+  temperaturaAlerta,
+} from "./constantes";
 import { TemperaturaReactor } from "./temperaturaReactor";
 
 export default class Notificador {
   public enviarNotificacion(temp: number): TemperaturaReactor {
-    if (temp >= 280 && temp < 330) {
+    if (temp >= minTemperatuta && temp < temperaturaAlerta) {
       return TemperaturaReactor.NORMAL;
     }
-    if (temp >= 330 && temp < 400) {
+    if (temp >= temperaturaAlerta && temp < maxTemperatura) {
       return TemperaturaReactor.MODERADO;
     }
-    if (temp >= 400) {
+    if (temp >= maxTemperatura) {
       return TemperaturaReactor.CRITICO;
     }
     return TemperaturaReactor.FRIO;
