@@ -26,11 +26,11 @@ export default class TablaEnergia {
             let temperaturaInicial = 0;
             let temperaturaFinal = 0;
 
-            for (const temp of this._tablaEnergia.keys()) {
-                if (temp <= temperatura) {
-                    temperaturaInicial = temp;
+            for (const tempKeys of this._tablaEnergia.keys()) {
+                if (tempKeys < temperatura) {
+                    temperaturaInicial = tempKeys;
                 } else {
-                    temperaturaFinal = temp;
+                    temperaturaFinal = tempKeys;
                     break;
                 }
             }
