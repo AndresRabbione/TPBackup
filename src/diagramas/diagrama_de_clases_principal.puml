@@ -1,6 +1,13 @@
 @startuml Planta Nuclear
 title Diagrama de Clases - Planta Nuclear
 
+class Singleton {
+    - singleton: ReactorNuclear
+
+    - setSignleton(reactor: ReactorNuclear)
+    + getSingleton(): ReactorNuclear
+}
+
 interface Notificable {
     + recibirAlerta()
 }
@@ -12,8 +19,8 @@ class Duenio implements Notificable {
 class Operador implements Notificable {
     + nombre: String
 
-    + insertarBarra(ReactorNuclear): BarraDeControl[]
-    + recibirAlerta(reactorNuclear: ReactorNuclear)
+    + insertarBarra(): BarraDeControl[]
+    + recibirAlerta()
 }
 
 'class RegistroDeInformacion {}
@@ -36,7 +43,6 @@ class ReactorNuclear {
     + sensor: Sensor
     + notificador: Notificador
     + generadorE: GeneradorDeEnergia
-    + estado: 
 
     + iniciarReactor()
     + pararReactor()
@@ -48,8 +54,10 @@ class Sensor {
 }
 
 class Notificador {
-    + enviarNotificacion(reactor: Reactor, operadores: Operador[]) 
+    + enviarNotificacion(operadores: Operador[])
 }
+
+'operador.recibir(reactor)
 
 class BarraDeControl {
     + tiempoDeVidaUtil : number
@@ -124,7 +132,7 @@ GeneradorDeEnergia o-- TablaEnergia
 
 GeneradorDeEnergia --> Constantes
 
-
+Singleton *-- ReactorNuclear
 
 'Preguntas: ¿Como aumenta la temperatura del reactor? ¿Sola? ¿Lo simulamos?
 'Como delegamos las responsabilidades de los Operadores
