@@ -1,6 +1,6 @@
 import BarraDeControl from "./barraDeControl";
 import {
-  energiaGeneradaPorHora,
+  cambioTemperaturaPorHora,
   maxTemperatura,
   temperaturaAlerta,
 } from "./constantes";
@@ -40,14 +40,14 @@ export default class Operador implements Notificable {
     for (let i: number = barrasOrdenadas.length - 1; i >= 0; i--) {
       if (
         tempActual * barrasOrdenadas[i].calcularPorcentaje() <=
-        energiaGeneradaPorHora - decrementoActual
+        cambioTemperaturaPorHora - decrementoActual
       ) {
         decrementoActual +=
           tempActual * barrasOrdenadas[i].calcularPorcentaje();
         tempActual -= tempActual * barrasOrdenadas[i].calcularPorcentaje();
         barrasFinales.push(barrasOrdenadas[i]);
       }
-      if (decrementoActual == energiaGeneradaPorHora) break;
+      if (decrementoActual == cambioTemperaturaPorHora) break;
     }
 
     return barrasFinales;
