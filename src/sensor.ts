@@ -4,9 +4,17 @@ import ISensor from "./sensor.interface";
 export default class Sensor implements ISensor{
 
     private _temperatura: number = 0;
+  
     private observers: Observer[] = [];
     
-    informar(): void {
+    public get temperatura(): number {
+        return this._temperatura;
+    }
+    public set temperatura(value: number) {
+        this._temperatura = value;
+    }
+
+    notificar(): void {
         for (const observer of this.observers) {
             observer.actualizar(this);
         }
@@ -30,7 +38,7 @@ export default class Sensor implements ISensor{
 
     informarTemperatura(): void {
         this._temperatura = Math.floor(Math.random() * (200 + 1))
-        this.informar();
+        this.notificar();
     }
 
 }
