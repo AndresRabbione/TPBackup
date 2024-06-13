@@ -10,6 +10,7 @@ export default class Sensor implements ISensor{
     public get temperatura(): number {
         return this._temperatura;
     }
+    
     public set temperatura(value: number) {
         this._temperatura = value;
     }
@@ -22,6 +23,7 @@ export default class Sensor implements ISensor{
 
     subscribir(observer: Observer): void {
         const isExist = this.observers.includes(observer);
+        
         if (isExist) {
             return;
         }
@@ -30,14 +32,16 @@ export default class Sensor implements ISensor{
 
     desuscribir(observer: Observer): void {
         const observerIndex = this.observers.indexOf(observer);
+        
         if (observerIndex === -1) {
             return;
         }
+        
         this.observers.splice(observerIndex, 1);
     }
 
-    informarTemperatura(): void {
-        this._temperatura = Math.floor(Math.random() * (200 + 1))
+    actualizarTemperatura(temperatura: number): void {
+        this._temperatura = temperatura;
         this.notificar();
     }
 
