@@ -3,6 +3,7 @@ import {
   cambioTemperaturaPorHora,
   maxTemperatura,
   temperaturaAlerta,
+  temperaturaOptima,
 } from "./constantes";
 import { Notificable } from "./notificable";
 
@@ -36,18 +37,19 @@ export default class Operador implements Notificable {
     let tempActual: number = reactor.temp;
     let decrementoActual: number = 0;
     let barrasFinales: BarraDeControl[] = [];
+    const objetivo: number = tempActual - temperaturaOptima;
 
     for (let i: number = barrasOrdenadas.length - 1; i >= 0; i--) {
       if (
         tempActual * barrasOrdenadas[i].calcularPorcentaje() <=
-        cambioTemperaturaPorHora - decrementoActual
+        objetivo - decrementoActual
       ) {
         decrementoActual +=
           tempActual * barrasOrdenadas[i].calcularPorcentaje();
         tempActual -= tempActual * barrasOrdenadas[i].calcularPorcentaje();
         barrasFinales.push(barrasOrdenadas[i]);
       }
-      if (decrementoActual == cambioTemperaturaPorHora) break;
+      if (decrementoActual == objetivo) break;
     }
 
     return barrasFinales;
