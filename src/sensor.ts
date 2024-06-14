@@ -21,7 +21,7 @@ export default class Sensor implements ISensor{
         }
     }
 
-    subscribir(observer: Observer): void {
+    suscribir(observer: Observer): void {
         const isExist = this.observers.includes(observer);
         
         if (isExist) {
@@ -44,5 +44,4 @@ export default class Sensor implements ISensor{
         this._temperatura = temperatura;
         this.notificar();
     }
-
 }
