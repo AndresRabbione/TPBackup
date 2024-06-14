@@ -1,17 +1,14 @@
 import BarraDeControl from "./barraDeControl";
-import {
-  cambioTemperaturaPorHora,
-  maxTemperatura,
-  temperaturaAlerta,
-  temperaturaOptima,
-} from "./constantes";
+import { temperaturaOptima } from "./constantes";
 import { Notificable } from "./notificable";
 
 export default class Operador implements Notificable {
   private _nombre: String;
+  private _next: Operador | undefined;
 
-  constructor(nombre: String) {
+  constructor(nombre: String, next: Operador) {
     this._nombre = nombre;
+    this._next = next;
   }
 
   public get nombre(): String {
@@ -22,7 +19,7 @@ export default class Operador implements Notificable {
     this._nombre = nombre;
   }
 
-  public insertarBarra(): BarraDeControl[] {
+  public elegirBarras(temperaturaReactor: number): BarraDeControl[] {
     if (reactor.barrasDeControl.length == 0) {
       return [];
     }
@@ -34,7 +31,7 @@ export default class Operador implements Notificable {
       (a: BarraDeControl, b: BarraDeControl) =>
         a.tiempoDeVidaUtil < b.tiempoDeVidaUtil ? -1 : 1
     );
-    let tempActual: number = reactor.temp;
+    let tempActual: number = temperaturaReactor;
     let decrementoActual: number = 0;
     let barrasFinales: BarraDeControl[] = [];
     const objetivo: number = tempActual - temperaturaOptima;
@@ -55,11 +52,16 @@ export default class Operador implements Notificable {
     return barrasFinales;
   }
 
-  public recibirAlerta() {
-    if (reactor.sensor.verificarTemperatura() >= temperaturaAlerta) {
-      this.insertarBarra();
-    } else if (reactor.sensor.verificarTemperatura() >= maxTemperatura) {
-      reactor.pararReactor();
+  public quiereManejar(): boolean {
+    if (this._next === undefined || Math.random() >= 0.5) return true;
+    return false;
+  }
+
+  public actualizar(estadoReactor: EstadoReactor) {
+    if (this.quiereManejar()) {
+      estadoReactor.manejarSituacion(this);
+    } else {
+      this._next?.actualizar(estadoReactor);
     }
   }
 }

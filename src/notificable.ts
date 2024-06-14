@@ -1,3 +1,3 @@
 export interface Notificable {
-  recibirAlerta(): void;
+  recibirAlerta(estadoReactor: Estado): void;
 }
