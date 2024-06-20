@@ -22,7 +22,6 @@ class PlantaNuclear {
     + reactor: ReactorNuclear
     + operadores: Operador[]
     + duenio: Duenio
-    + turbinas: Turbina
 
     + iniciarSimulacion()
 }
