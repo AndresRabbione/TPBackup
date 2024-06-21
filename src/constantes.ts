@@ -5,6 +5,7 @@ export const minTemperatuta: number = 280;
 export const cambioTemperaturaPorMinuto: number = 0.5;
 export const cambioTemperaturaPorHora: number = 30;
 export const temperaturaOptima = temperaturaAlerta - cambioTemperaturaPorHora;
+export const horasLimite = 20;
 export const tablaTemperatura: number[] = [
   280, 288.33, 296.66, 304.99, 313.32, 321.65, 329.98,
 ];
