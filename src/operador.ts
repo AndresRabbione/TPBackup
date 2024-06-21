@@ -31,28 +31,27 @@ export default class Operador implements Notificable {
 
   private gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[]) {
     for (let i: number = 0; i < barras.length; i++) {
-      let index: number = reactor.barrasDeControl.indexOf(barras[i]);
-      reactor.barrasDeControl[index].setTiempoDeVida(
-        reactor.barrasDeControl[index].tiempoDeVidaUtil - 50
-      );
+      let index: number = reactor.getBarras().indexOf(barras[i]);
+      reactor.getBarras()[index].bajarTiempoDeVida(50);
       if (barras[i].tiempoDeVidaUtil <= 0) {
-        reactor.barrasDeControl.splice(index, 1);
+        reactor.getBarras().splice(index, 1);
       }
     }
   }
 
   private elegirBarras(reactor: ReactorNuclear): BarraDeControl[] {
-    if (reactor.barrasDeControl.length == 0) {
+    if (reactor.getBarras().length == 0) {
       return [];
     }
 
     //Este sort ordena las barras de manera ascendente por su tiempo de vida util
     //Esta funcion se hace sobre una copia por si en algun caso futuro preservar el orden -
     //actual del array es importante. Esto puede ser cambiado en futuro si ese no es el caso
-    const barrasOrdenadas: BarraDeControl[] = reactor.barrasDeControl.sort(
-      (a: BarraDeControl, b: BarraDeControl) =>
+    const barrasOrdenadas: BarraDeControl[] = reactor
+      .getBarras()
+      .sort((a: BarraDeControl, b: BarraDeControl) =>
         a.tiempoDeVidaUtil < b.tiempoDeVidaUtil ? -1 : 1
-    );
+      );
     let tempActual: number = reactor.getTemperatura();
     let decrementoActual: number = 0;
     let barrasFinales: BarraDeControl[] = [];
