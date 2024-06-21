@@ -21,13 +21,25 @@ export default class Operador implements Notificable {
     this._nombre = nombre;
   }
 
-  public insertarBarras(reactor: ReactorNuclear) {
+  public insertarBarras(reactor: ReactorNuclear): BarraDeControl[] {
     const barras: BarraDeControl[] = this.elegirBarras(reactor);
 
-    this.gastarBarras(barras);
+    this.gastarBarras(reactor, barras);
+
+    return barras;
   }
 
-  private gastarBarras(barras: BarraDeControl[]) {}
+  private gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[]) {
+    for (let i: number = 0; i < barras.length; i++) {
+      let index: number = reactor.barrasDeControl.indexOf(barras[i]);
+      reactor.barrasDeControl[index].setTiempoDeVida(
+        reactor.barrasDeControl[index].tiempoDeVidaUtil - 50
+      );
+      if (barras[i].tiempoDeVidaUtil <= 0) {
+        reactor.barrasDeControl.splice(index, 1);
+      }
+    }
+  }
 
   private elegirBarras(reactor: ReactorNuclear): BarraDeControl[] {
     if (reactor.barrasDeControl.length == 0) {
