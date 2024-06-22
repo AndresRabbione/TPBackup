@@ -9,15 +9,13 @@ import ReactorNuclear from "../reactor_nuclear/ReactorNuclear";
 import Critico from "./Critico";
 import EstadoReactor from "./EstadoReactor";
 import Moderado from "./Moderado";
-import Frio from "./frio";
+import Normal from "./Normal";
 
-export default class Normal implements EstadoReactor {
+export default class Frio implements EstadoReactor {
   private reactor: ReactorNuclear;
-  private clave: String;
 
   constructor(reactor: ReactorNuclear) {
     this.reactor = reactor;
-    this.clave = "normal";
   }
 
   public actualizarEstadoReactor(reactor: ReactorNuclear): void {
@@ -25,7 +23,7 @@ export default class Normal implements EstadoReactor {
   }
 
   public getCapacidad(): number {
-    return 1;
+    return 0;
   }
 
   public calcularEnergia(energiaProducida: number): number {
@@ -33,11 +31,18 @@ export default class Normal implements EstadoReactor {
   }
 
   public checkEstado(): void {
-    if (this.reactor.getTemperatura() < minTemperatuta) {
-      let estado: EstadoReactor = new Frio(this.reactor);
+    if (
+      this.reactor.getTemperatura() >= minTemperatuta &&
+      this.reactor.getTemperatura() < temperaturaAlerta
+    ) {
+      let estado: EstadoReactor = new Normal(this.reactor);
       this.reactor.cambiarEstado(estado);
+      this.reactor.getReportador().recibirReporteEstado("normal");
       return;
-    } else if (this.reactor.getTemperatura() >= temperaturaAlerta) {
+    } else if (
+      this.reactor.getTemperatura() >= temperaturaAlerta &&
+      this.reactor.getTemperatura() < maxTemperatura
+    ) {
       let estado: EstadoReactor = new Moderado(this.reactor);
       this.reactor.cambiarEstado(estado);
       return;
