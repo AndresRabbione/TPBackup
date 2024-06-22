@@ -1,47 +1,41 @@
-import Observer from "./observer.interface";
-import ISensor from "./sensor.interface";
+import EstadoReactor from "./estados/EstadoReactor";
+import { Notificable } from "./notificable";
+import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
 
-export default class Sensor implements ISensor{
+export default class Sensor {
+  private observers: Notificable[];
 
-    private _temperatura: number = 0;
-  
-    private observers: Observer[] = [];
-    
-    public get temperatura(): number {
-        return this._temperatura;
+  constructor() {
+    this.observers = [];
+  }
+
+  notificar(estado: EstadoReactor): void {
+    for (const observer of this.observers) {
+      observer.recibirAlerta(estado, false);
     }
-    
-    public set temperatura(value: number) {
-        this._temperatura = value;
-    }
+  }
 
-    notificar(): void {
-        for (const observer of this.observers) {
-            observer.actualizar(this);
-        }
-    }
+  suscribir(observer: Notificable): void {
+    const isExist = this.observers.includes(observer);
 
-    suscribir(observer: Observer): void {
-        const isExist = this.observers.includes(observer);
-        
-        if (isExist) {
-            return;
-        }
-        this.observers.push(observer);
+    if (isExist) {
+      return;
     }
+    this.observers.push(observer);
+  }
 
-    desuscribir(observer: Observer): void {
-        const observerIndex = this.observers.indexOf(observer);
-        
-        if (observerIndex === -1) {
-            return;
-        }
-        
-        this.observers.splice(observerIndex, 1);
+  desuscribir(observer: Notificable): void {
+    const observerIndex = this.observers.indexOf(observer);
+
+    if (observerIndex === -1) {
+      return;
     }
 
-    actualizarTemperatura(temperatura: number): void {
-        this._temperatura = temperatura;
-        this.notificar();
-    }
+    this.observers.splice(observerIndex, 1);
+  }
+
+  actualizarTemperatura(reactor: ReactorNuclear): void {
+    reactor.getEstado().checkEstado();
+    this.notificar(reactor.getEstado());
+  }
 }
