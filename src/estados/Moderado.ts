@@ -37,7 +37,7 @@ export default class Moderado implements EstadoReactor {
       return;
     } else if (
       this.reactor.getTemperatura() >= minTemperatuta &&
-      this.reactor.getTemperatura() >= temperaturaAlerta
+      this.reactor.getTemperatura() < temperaturaAlerta
     ) {
       let estado: EstadoReactor = new Normal(this.reactor);
       this.reactor.cambiarEstado(estado);

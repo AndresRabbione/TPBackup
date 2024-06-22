@@ -32,7 +32,7 @@ export default class Reportador {
 
   public recibirReporteTotal(horasReporte: number) {
     console.log(
-      `Despues de ${horasReporte} se genero ${this._energiaTotal} MWe`
+      `Despues de ${horasReporte} hora(s) se genero ${this._energiaTotal} MWe`
     );
   }
 

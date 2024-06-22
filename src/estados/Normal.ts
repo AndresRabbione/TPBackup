@@ -37,7 +37,10 @@ export default class Normal implements EstadoReactor {
       let estado: EstadoReactor = new Frio(this.reactor);
       this.reactor.cambiarEstado(estado);
       return;
-    } else if (this.reactor.getTemperatura() >= temperaturaAlerta) {
+    } else if (
+      this.reactor.getTemperatura() >= temperaturaAlerta &&
+      this.reactor.getTemperatura() < maxTemperatura
+    ) {
       let estado: EstadoReactor = new Moderado(this.reactor);
       this.reactor.cambiarEstado(estado);
       return;

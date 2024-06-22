@@ -10,7 +10,7 @@ export default class Operador implements Notificable {
   private _next: Operador | undefined;
   private _duenio: Duenio;
 
-  constructor(nombre: String, next: Operador, duenio: Duenio) {
+  constructor(nombre: String, next: Operador | undefined, duenio: Duenio) {
     this._nombre = nombre;
     this._next = next;
     this._duenio = duenio;

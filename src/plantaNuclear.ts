@@ -16,17 +16,22 @@ export default class PlantaNuclear {
     this._horasOperadas = 0;
   }
 
-  public iniciarSimulacion(horasReporte: number, limite?: number): void {
+  public iniciarSimulacion(horasReporte: number, limite?: number): number {
     if (limite === undefined) {
       limite = horasLimite;
     }
     console.log(`Hora: ${this._horasOperadas + 1}`);
+    console.log("Minuto: 0");
     this._reactor.getSensor().actualizarTemperatura(this._reactor);
+    let ultimoTiempo: number = 0;
     for (let i: number = 5; i <= 60; i += 5) {
       console.log(`Minuto: ${i}`);
-      setTimeout(() => {
-        this._reactor.cambiarTemperatura(i);
-      }, 750);
+      this._reactor.cambiarTemperatura(i - ultimoTiempo);
+      console.log(this._reactor.getEstado().getCapacidad());
+      // setTimeout(() => {
+      //   this._reactor.cambiarTemperatura(i);
+      // }, 750);
+      ultimoTiempo = i;
     }
 
     this._horasOperadas++;
@@ -37,9 +42,13 @@ export default class PlantaNuclear {
 
     if (this._horasOperadas < limite) {
       this.iniciarSimulacion(horasReporte, limite);
+      return 1;
     } else {
       this.finalizarSimulacion();
+      return 0;
     }
+
+    return -1;
   }
 
   public finalizarSimulacion() {
