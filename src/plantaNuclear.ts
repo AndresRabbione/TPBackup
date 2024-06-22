@@ -5,11 +5,11 @@ import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
 
 export default class PlantaNuclear {
   private _reactor: ReactorNuclear;
-  private _operadores: Operador[];
+  private _operadores: Operador;
   private _duenio: Duenio;
   private _horasOperadas: number;
 
-  constructor(reactor: ReactorNuclear, operadores: Operador[], duenio: Duenio) {
+  constructor(reactor: ReactorNuclear, operadores: Operador, duenio: Duenio) {
     this._duenio = duenio;
     this._operadores = operadores;
     this._reactor = reactor;
