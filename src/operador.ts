@@ -1,5 +1,6 @@
 import BarraDeControl from "./barraDeControl";
 import { temperaturaOptima } from "./constantes";
+import Duenio from "./duenio";
 import EstadoReactor from "./estados/EstadoReactor";
 import { Notificable } from "./notificable";
 import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
@@ -7,10 +8,12 @@ import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
 export default class Operador implements Notificable {
   private _nombre: String;
   private _next: Operador | undefined;
+  private _duenio: Duenio;
 
-  constructor(nombre: String, next: Operador) {
+  constructor(nombre: String, next: Operador, duenio: Duenio) {
     this._nombre = nombre;
     this._next = next;
+    this._duenio = duenio;
   }
 
   public get nombre(): String {
@@ -21,10 +24,15 @@ export default class Operador implements Notificable {
     this._nombre = nombre;
   }
 
+  public setNext(next: Operador) {
+    this._next = next;
+  }
+
   public insertarBarras(reactor: ReactorNuclear): BarraDeControl[] {
     const barras: BarraDeControl[] = this.elegirBarras(reactor);
 
     this.gastarBarras(reactor, barras);
+    reactor.getReportador().recibirReporteBarras(barras.length);
 
     return barras;
   }
@@ -78,12 +86,21 @@ export default class Operador implements Notificable {
     return false;
   }
 
-  public recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean) {
+  public recibirAlerta(
+    estadoReactor: EstadoReactor,
+    manejado: boolean
+  ): number {
     if (this.quiereManejar() && !manejado) {
       estadoReactor.manejarSituacion(this);
       this._next?.recibirAlerta(estadoReactor, true);
     } else {
       this._next?.recibirAlerta(estadoReactor, manejado);
     }
+
+    return 1;
+  }
+
+  public notificarDuenio(estado: EstadoReactor) {
+    this._duenio.recibirAlerta(estado, true);
   }
 }
