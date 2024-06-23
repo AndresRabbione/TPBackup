@@ -2,18 +2,22 @@ import Operador from "./operador";
 import Duenio from "./duenio";
 import { horasLimite } from "./constantes";
 import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
+import GestorDeOperadores from "./gestorDeOperadores";
 
 export default class PlantaNuclear {
   private _reactor: ReactorNuclear;
-  private _operadores: Operador;
+  private _operadores: Operador[];
   private _duenio: Duenio;
   private _horasOperadas: number;
+  private _gestorDeOperadores: GestorDeOperadores;
 
-  constructor(reactor: ReactorNuclear, operadores: Operador, duenio: Duenio) {
+  constructor(reactor: ReactorNuclear, operadores: Operador[], duenio: Duenio) {
     this._duenio = duenio;
     this._operadores = operadores;
     this._reactor = reactor;
     this._horasOperadas = 0;
+    this._gestorDeOperadores = new GestorDeOperadores(operadores);
+    this._reactor.getSensor().suscribir(this._gestorDeOperadores);
   }
 
   public iniciarSimulacion(horasReporte: number, limite?: number): number {
@@ -54,5 +58,9 @@ export default class PlantaNuclear {
   public finalizarSimulacion() {
     this._duenio.recibirAlerta(this._reactor.apagarReactor(), true);
     this._reactor.getReportador().recibirReporteTotal(this._horasOperadas);
+  }
+
+  public getGestor(): GestorDeOperadores {
+    return this._gestorDeOperadores;
   }
 }

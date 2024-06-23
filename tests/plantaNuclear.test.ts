@@ -5,6 +5,7 @@ import ReactorNuclear from "../src/reactor_nuclear/ReactorNuclear";
 import PlantaNuclear from "../src/plantaNuclear";
 import EstadoReactor from "../src/estados/EstadoReactor";
 import Apagado from "../src/estados/Apagado";
+import Moderado from "../src/estados/Moderado";
 
 jest.useFakeTimers();
 jest.spyOn(global, "setTimeout");
@@ -14,16 +15,22 @@ describe("PlantaNuclear", () => {
   let reactor_nuclear: ReactorNuclear;
   let estadoInicial: EstadoReactor;
   let operador1: Operador;
+  let operador2: Operador;
   let duenio: Duenio;
 
   beforeEach(() => {
-    duenio = new Duenio(operador1);
-    operador1 = new Operador("Homero", undefined, duenio);
+    duenio = new Duenio([operador1, operador2]);
+    operador1 = new Operador("Homero", duenio);
+    operador2 = new Operador("Jorge", duenio);
     estadoInicial = new Apagado(reactor_nuclear);
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 350, []);
+    reactor_nuclear = new ReactorNuclear(estadoInicial, 380, []);
     reactor_nuclear.cambiarEstado(estadoInicial);
-    instance = new PlantaNuclear(reactor_nuclear, operador1, duenio);
-    reactor_nuclear.getSensor().suscribir(operador1);
+    reactor_nuclear.encenderReactor(new Moderado(reactor_nuclear));
+    instance = new PlantaNuclear(
+      reactor_nuclear,
+      [operador1, operador2],
+      duenio
+    );
   });
 
   it("deberia ser una instancia de PlantaNuclear", () => {
@@ -36,7 +43,7 @@ describe("PlantaNuclear", () => {
     expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
   });
 
-  it("should have a method finalizarSimulacion()", () => {
+  it("deberia apagar el reactor y reportar los datos finales", () => {
     instance.finalizarSimulacion();
     expect(reactor_nuclear.getEstado() instanceof Apagado).toBeTruthy();
   });

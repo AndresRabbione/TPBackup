@@ -7,12 +7,10 @@ import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
 
 export default class Operador implements Notificable {
   private _nombre: String;
-  private _next: Operador | undefined;
   private _duenio: Duenio;
 
-  constructor(nombre: String, next: Operador | undefined, duenio: Duenio) {
+  constructor(nombre: String, duenio: Duenio) {
     this._nombre = nombre;
-    this._next = next;
     this._duenio = duenio;
   }
 
@@ -22,10 +20,6 @@ export default class Operador implements Notificable {
 
   public set nombre(nombre: String) {
     this._nombre = nombre;
-  }
-
-  public setNext(next: Operador) {
-    this._next = next;
   }
 
   public insertarBarras(reactor: ReactorNuclear): BarraDeControl[] {
@@ -81,20 +75,11 @@ export default class Operador implements Notificable {
     return barrasFinales;
   }
 
-  public quiereManejar(): boolean {
-    if (this._next === undefined || Math.random() >= 0.5) return true;
-    return false;
-  }
-
-  public recibirAlerta(
-    estadoReactor: EstadoReactor,
-    manejado: boolean
-  ): number {
-    if (this.quiereManejar() && !manejado) {
-      estadoReactor.manejarSituacion(this);
-      this._next?.recibirAlerta(estadoReactor, true);
+  public recibirAlerta(estado: EstadoReactor, manejado: boolean): number {
+    if (!manejado) {
+      estado.manejarSituacion(this);
     } else {
-      this._next?.recibirAlerta(estadoReactor, manejado);
+      return 0;
     }
 
     return 1;
