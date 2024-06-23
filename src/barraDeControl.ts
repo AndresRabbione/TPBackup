@@ -14,6 +14,6 @@ export default class BarraDeControl {
   }
 
   public calcularPorcentaje(): number {
-    return (this._tiempoDeVidaUtil / 3600) * 100;
+    return this._tiempoDeVidaUtil / 3600;
   }
 }

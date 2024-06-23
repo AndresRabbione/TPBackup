@@ -24,21 +24,24 @@ export default class Operador implements Notificable {
 
   public insertarBarras(reactor: ReactorNuclear): BarraDeControl[] {
     const barras: BarraDeControl[] = this.elegirBarras(reactor);
+    if (barras.length > 0) {
+      let temperaturaReactor: number = reactor.getTemperatura();
+      let decremento: number = 0;
 
-    this.gastarBarras(reactor, barras);
+      for (let i: number = 0; i < barras.length; i++) {
+        decremento += temperaturaReactor * barras[i].calcularPorcentaje();
+        temperaturaReactor -=
+          temperaturaReactor * barras[i].calcularPorcentaje();
+      }
+
+      reactor.setTemperatura(reactor.getTemperatura() - decremento);
+
+      this.gastarBarras(reactor, barras);
+    }
+
     reactor.getReportador().recibirReporteBarras(barras.length);
 
     return barras;
-  }
-
-  private gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[]) {
-    for (let i: number = 0; i < barras.length; i++) {
-      let index: number = reactor.getBarras().indexOf(barras[i]);
-      reactor.getBarras()[index].bajarTiempoDeVida(50);
-      if (barras[i].tiempoDeVidaUtil <= 0) {
-        reactor.getBarras().splice(index, 1);
-      }
-    }
   }
 
   private elegirBarras(reactor: ReactorNuclear): BarraDeControl[] {
@@ -49,11 +52,8 @@ export default class Operador implements Notificable {
     //Este sort ordena las barras de manera ascendente por su tiempo de vida util
     //Esta funcion se hace sobre una copia por si en algun caso futuro preservar el orden -
     //actual del array es importante. Esto puede ser cambiado en futuro si ese no es el caso
-    const barrasOrdenadas: BarraDeControl[] = reactor
-      .getBarras()
-      .sort((a: BarraDeControl, b: BarraDeControl) =>
-        a.tiempoDeVidaUtil < b.tiempoDeVidaUtil ? -1 : 1
-      );
+    const barrasOrdenadas: BarraDeControl[] = reactor.getBarras();
+
     let tempActual: number = reactor.getTemperatura();
     let decrementoActual: number = 0;
     let barrasFinales: BarraDeControl[] = [];
@@ -75,6 +75,21 @@ export default class Operador implements Notificable {
     return barrasFinales;
   }
 
+  private eliminarBarra(reactor: ReactorNuclear, barra: BarraDeControl) {
+    let index: number = reactor.getBarras().indexOf(barra);
+    reactor.getBarras().splice(index, 1);
+  }
+
+  private gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[]) {
+    for (const barra of barras) {
+      let j: number = reactor.getBarras().indexOf(barra);
+      reactor.getBarras()[j].bajarTiempoDeVida(50);
+      if (reactor.getBarras()[j].tiempoDeVidaUtil <= 0) {
+        this.eliminarBarra(reactor, reactor.getBarras()[j]);
+      }
+    }
+  }
+
   public recibirAlerta(estado: EstadoReactor, manejado: boolean): number {
     if (!manejado) {
       estado.manejarSituacion(this);
@@ -86,6 +101,6 @@ export default class Operador implements Notificable {
   }
 
   public notificarDuenio(estado: EstadoReactor) {
-    this._duenio.recibirAlerta(estado, true);
+    return this._duenio.recibirAlerta(estado, true);
   }
 }

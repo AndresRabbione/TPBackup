@@ -14,8 +14,8 @@ import Frio from "./frio";
 export default class Moderado implements EstadoReactor {
   private reactor: ReactorNuclear;
 
-  constructor(reactor: ReactorNuclear) {
-    this.reactor = reactor;
+  constructor(reactor?: ReactorNuclear) {
+    this.reactor = reactor!;
   }
 
   public actualizarEstadoReactor(reactor: ReactorNuclear): void {

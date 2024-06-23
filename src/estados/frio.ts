@@ -14,8 +14,8 @@ import Normal from "./Normal";
 export default class Frio implements EstadoReactor {
   private reactor: ReactorNuclear;
 
-  constructor(reactor: ReactorNuclear) {
-    this.reactor = reactor;
+  constructor(reactor?: ReactorNuclear) {
+    this.reactor = reactor!;
   }
 
   public actualizarEstadoReactor(reactor: ReactorNuclear): void {

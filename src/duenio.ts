@@ -5,12 +5,16 @@ import Operador from "./operador";
 export default class Duenio implements Notificable {
   private _operadores: Operador[];
 
-  constructor(operadores: Operador[]) {
-    this._operadores = operadores;
+  constructor(operadores?: Operador[]) {
+    this._operadores = operadores!;
   }
 
   public recibirAlerta(estado: EstadoReactor, manejado: boolean) {
     console.log(`El duenio recibio la notificacion`);
     return 1;
+  }
+
+  public setOperadores(operadores: Operador[]) {
+    this._operadores = operadores;
   }
 }

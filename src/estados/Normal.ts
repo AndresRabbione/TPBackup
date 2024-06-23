@@ -15,8 +15,8 @@ export default class Normal implements EstadoReactor {
   private reactor: ReactorNuclear;
   private clave: String;
 
-  constructor(reactor: ReactorNuclear) {
-    this.reactor = reactor;
+  constructor(reactor?: ReactorNuclear) {
+    this.reactor = reactor!;
     this.clave = "normal";
   }
 
