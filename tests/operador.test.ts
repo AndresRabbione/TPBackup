@@ -24,6 +24,15 @@ describe("Operador", () => {
     reactor.cambiarEstado(estadoInicial);
   });
 
+  it("deberia devolver el nombre del operador", () => {
+    expect(instance.nombre).toBe("Homero");
+  });
+
+  it("deberia cambiar el nombre del operador a otro", () => {
+    instance.nombre = "Jorge";
+    expect(instance.nombre).toBe("Jorge");
+  });
+
   it("deberia ser una instancia de Operador", () => {
     expect(instance instanceof Operador).toBeTruthy();
   });

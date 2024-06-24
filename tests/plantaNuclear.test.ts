@@ -28,7 +28,7 @@ describe("PlantaNuclear", () => {
     estadoInicial = new Apagado(reactor_nuclear);
     barra1 = new BarraDeControl(150);
     barra2 = new BarraDeControl(200);
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 330, [barra1, barra2]);
+    reactor_nuclear = new ReactorNuclear(estadoInicial, 310, [barra1, barra2]);
     reactor_nuclear.cambiarEstado(estadoInicial);
     reactor_nuclear.encenderReactor(new Moderado(reactor_nuclear));
     instance = new PlantaNuclear(
@@ -43,6 +43,20 @@ describe("PlantaNuclear", () => {
   });
 
   it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora", () => {
+    let horasReporte: number = 1;
+    let limite: number = 1;
+    expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
+  });
+
+  it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba usa el estado frio para prevenir un bug con Jest", () => {
+    reactor_nuclear = new ReactorNuclear(estadoInicial, 270, [barra1, barra2]);
+    reactor_nuclear.cambiarEstado(estadoInicial);
+    reactor_nuclear.encenderReactor(new Moderado(reactor_nuclear));
+    instance = new PlantaNuclear(
+      reactor_nuclear,
+      [operador1, operador2],
+      duenio
+    );
     let horasReporte: number = 1;
     let limite: number = 1;
     expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
