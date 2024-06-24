@@ -2,69 +2,102 @@
 title Diagrama de Clases - Planta Nuclear
 
 interface Notificable {
-    + recibirAlerta()
+    + recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean): number
 }
 
 class Duenio implements Notificable {
-    + recibirAlerta()
+    - operadores: Operador[]
+
+    + recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean): number
+    + setOperadores(operadores: Operador[])
+}
+
+class GestorDeOperadores {
+    - operadores: Operador[]
+    - indiceActual: number
+
+    + notificarOperadores(estadoReactor: EstadoReactor)
+    + agregarOperador(operador: Operador)
+    + sacarOperador(operador: Operador)
+    + getOperadores(): Operador[]
 }
 
 class Operador implements Notificable {
-    + nombre: String
+    - nombre: String
+    - duenio: Duenio
 
-    + insertarBarra(): BarraDeControl[]
-    + recibirAlerta()
+    + insertarBarras(reactor: ReactorNuclear): BarraDeControl[]
+    - elegirBarras(reactor: ReactorNuclear): BarraDeControl[]
+    - eliminarBarra(reactor: ReactorNuclear, barra: BarraDeControl)
+    - gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[])
+    + recibirAlerta(estado: EstadoReactor, manejado: boolean): number
+    + notificarDuenio(estado: EstadoReactor): number
 }
 
-'class RegistroDeInformacion {}
+class Reportador {
+    - energiaTotal: number
+    - acumuladorEstados: Map<String, number>
+
+    - inicializarContadorDeEventos()
+    + recibirReporteRegular(temperatura: number, energia: number): number[]
+    + recibirReporteBarras(barras: number): number
+    + recibirReporteTotal(horasReporte: number)
+    + recibirReporteEstado(estado: String)
+}
 
 class PlantaNuclear {
-    + reactor: ReactorNuclear
-    + operadores: Operador[]
-    + duenio: Duenio
+    - reactor: ReactorNuclear
+    - operadores: Operador[]
+    - duenio: Duenio
+    - horasOperadas: number
+    - gestorDeOperadores: GestorDeOperadores
 
-    + iniciarSimulacion()
+    + iniciarSimulacion(horasReporte: number, limite?: number): number
+    + finalizarSimulacion()
+    + getGestor(): GestorDeOperadores
 }
 
 class ReactorNuclear {
     - estadoActual: EstadoReactor
     - tablaDeEnergia: TablaEnergia
     - temperatura: number
+    - barrasDeControl: BarraDeControl[]
     - sensor: Sensor
-    - notificador: Notificador
-    - horasEncendido: number
+    - reportador: Reportador
 
+    + encenderReactor(estado: EstadoReactor)
+    + apagarReactor(): EstadoReactor
     + cambiarEstado(nuevoEstado: EstadoReactor)
-    + energiaNetaProducida(): number
-    + energiaProducida(): number
-    + manejarSituacion(): number
-
-    '+ barrasDeControl: BarraDeControl[]
-    '+ iniciarReactor()
-    '+ pararReactor()
-    '+ disminuirTemperatura() 'temperatura - temperatura * %'
+    + getSensor(): Sensor
+    + getEstado(): EstadoReactor
+    + getTemperatura(): number
+    + setTemperatura(temperatura: number)
+    + getReportador(): Reportador
+    + getBarras(): BarraDeControl[]
+    + setBarras(barras: BarraDeControl[])
+    - energiaNetaProducida(): number
+    + cambiarTemperatura(tiempo: number)
 }
 
 class Sensor {
-    + verificarTemperatura(): number
-}
+    - observer: GestorDeOperadores | undefined
 
-class Notificador {
-    + enviarNotificacion(operadores: Operador[])
+    + notificar(estado: EstadoReactor)
+    + suscribir(observer: GestorDeOperadores)
+    + actualizarTemperatura(reactor: ReactorNuclear)
 }
-
-'operador.recibir(reactor)
 
 class BarraDeControl {
     + tiempoDeVidaUtil : number
     
-    + calcularPorcentaje(tiempoDeVida) : number
+    + bajarTiempoDeVida(decremento: number)
+    + calcularPorcentaje() : number
 }
 
 class TablaEnergia {
     - tablaEnergia: Map<number, [number, number]>
 
-    - interpolarEnergia(): number
+    - interpolarEnergia(temperatura: number, temperaturaInicial: number, energiaInicial: number, temperaturaFinal: number, energiaFinal: number): number
     + energiaNeta(temperatura: number): number
 }
 
@@ -72,50 +105,74 @@ Interface EstadoReactor {
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + manejarSituacion(): number
+    + checkEstado()
+    + manejarSituacion(operador: Operador): number
+    + cambioTemperatura(): number
 }
 
-'class Frio implements Estado {
-    '+ getCapacidad(): number
-'}
-
-class Normal implements EstadoReactor {
+class Frio implements Estado {
     - reactor: ReactorNuclear
+
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + manejarSituacion(): number
+    + checkEstado()
+    + manejarSituacion(operador: Operador): number
+    + cambioTemperatura(): number
+}
+
+class Normal implements EstadoReactor {
+    - reactor: ReactorNuclear
+
+    + actualizarEstadoReactor(reactor: ReactorNuclear): void
+    + getCapacidad(): number
+    + calcularEnergia(energiaProducida: number): number
+    + checkEstado()
+    + manejarSituacion(operador: Operador): number
+    + cambioTemperatura(): number
 }
 
 class Moderado implements EstadoReactor {
     - reactor: ReactorNuclear
+
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + manejarSituacion(): number
+    + checkEstado()
+    + manejarSituacion(operador: Operador): number
+    + cambioTemperatura(): number
 }
 
 class Critico implements EstadoReactor {
     - reactor: ReactorNuclear
+
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + manejarSituacion(): number
+    + checkEstado()
+    + manejarSituacion(operador: Operador): number
+    + cambioTemperatura(): number
 }
 
 class Apagado implements EstadoReactor {
     - reactor: ReactorNuclear
+
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + manejarSituacion(): number
+    + checkEstado()
+    + manejarSituacion(operador: Operador): number
+    + cambioTemperatura(): number
 }
 
 enum Constantes {
     + maxTemperatura = 400
     + temperaturaAlerta = 330
-    + capacidadMaxReactor = 700
     + minTemperatura = 280
+    + cambioTemperaturaPorMinuto = 0.5
+    + cambioTemperaturaPorHora = 30
+    + temperaturaOptima = temperaturaAlerta - cambioTemperaturaPorHora
+    + horasLimite = 10
 }
 
 PlantaNuclear o-u- Operador
