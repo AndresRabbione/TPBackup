@@ -10,20 +10,20 @@ export default class Sensor {
     this.observer = undefined;
   }
 
-  notificar(estado: EstadoReactor): void {
+  public notificar(estado: EstadoReactor): void {
     this.observer!.notificarOperadores(estado);
   }
 
-  suscribir(observer: GestorDeOperadores): void {
+  public suscribir(observer: GestorDeOperadores): void {
     this.observer = observer;
   }
-
-  // desuscribir(observer: Notificable): void {
-  //   this.observers.splice(observerIndex, 1);
-  // }
 
   public actualizarTemperatura(reactor: ReactorNuclear): void {
     reactor.getEstado().checkEstado();
     this.notificar(reactor.getEstado());
+  }
+
+  public getGestor(): GestorDeOperadores {
+    return this.observer!;
   }
 }

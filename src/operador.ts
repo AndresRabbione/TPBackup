@@ -100,7 +100,7 @@ export default class Operador implements Notificable {
     return 1;
   }
 
-  public notificarDuenio(estado: EstadoReactor) {
+  public notificarDuenio(estado: EstadoReactor): number {
     return this._duenio.recibirAlerta(estado, true);
   }
 }

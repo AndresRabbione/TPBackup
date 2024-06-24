@@ -9,12 +9,16 @@ export default class Duenio implements Notificable {
     this._operadores = operadores!;
   }
 
-  public recibirAlerta(estado: EstadoReactor, manejado: boolean) {
+  public recibirAlerta(estado: EstadoReactor, manejado: boolean): number {
     console.log(`El duenio recibio la notificacion`);
     return 1;
   }
 
   public setOperadores(operadores: Operador[]) {
     this._operadores = operadores;
+  }
+
+  public getOperadores(): Operador[] {
+    return this._operadores;
   }
 }
