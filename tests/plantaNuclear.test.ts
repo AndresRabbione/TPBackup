@@ -7,6 +7,8 @@ import Apagado from "../src/estados/Apagado";
 import Moderado from "../src/estados/Moderado";
 import GestorDeOperadores from "../src/gestorDeOperadores";
 import BarraDeControl from "../src/barraDeControl";
+import Frio from "../src/estados/frio";
+import Normal from "../src/estados/Normal";
 
 jest.useFakeTimers();
 jest.spyOn(global, "setTimeout");
@@ -48,10 +50,38 @@ describe("PlantaNuclear", () => {
     expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
   });
 
-  it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba usa el estado frio para prevenir un bug con Jest", () => {
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 270, [barra1, barra2]);
+  it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Frio a Moderado", () => {
+    reactor_nuclear = new ReactorNuclear(estadoInicial, 390, [barra1, barra2]);
     reactor_nuclear.cambiarEstado(estadoInicial);
-    reactor_nuclear.encenderReactor(new Moderado(reactor_nuclear));
+    reactor_nuclear.encenderReactor(new Frio(reactor_nuclear));
+    instance = new PlantaNuclear(
+      reactor_nuclear,
+      [operador1, operador2],
+      duenio
+    );
+    let horasReporte: number = 1;
+    let limite: number = 1;
+    expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
+  });
+
+  it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Frio a Critico", () => {
+    reactor_nuclear = new ReactorNuclear(estadoInicial, 450, [barra1, barra2]);
+    reactor_nuclear.cambiarEstado(estadoInicial);
+    reactor_nuclear.encenderReactor(new Frio(reactor_nuclear));
+    instance = new PlantaNuclear(
+      reactor_nuclear,
+      [operador1, operador2],
+      duenio
+    );
+    let horasReporte: number = 1;
+    let limite: number = 1;
+    expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
+  });
+
+  it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Normal a Critico", () => {
+    reactor_nuclear = new ReactorNuclear(estadoInicial, 450, [barra1, barra2]);
+    reactor_nuclear.cambiarEstado(estadoInicial);
+    reactor_nuclear.encenderReactor(new Normal(reactor_nuclear));
     instance = new PlantaNuclear(
       reactor_nuclear,
       [operador1, operador2],
