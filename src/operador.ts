@@ -49,9 +49,6 @@ export default class Operador implements Notificable {
       return [];
     }
 
-    //Este sort ordena las barras de manera ascendente por su tiempo de vida util
-    //Esta funcion se hace sobre una copia por si en algun caso futuro preservar el orden -
-    //actual del array es importante. Esto puede ser cambiado en futuro si ese no es el caso
     const barrasOrdenadas: BarraDeControl[] = reactor.getBarras();
 
     let tempActual: number = reactor.getTemperatura();
