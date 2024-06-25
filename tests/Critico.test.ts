@@ -49,6 +49,14 @@ describe("Critico", () => {
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
+    reactor = new ReactorNuclear(estadoInicial, 230, []);
+    reactor.cambiarEstado(estadoInicial);
+    reactor.cambiarEstado(instance);
+    instance.checkEstado();
+    expect(reactor.getEstado() instanceof Frio).toBeTruthy();
+  });
+
+  it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
     reactor = new ReactorNuclear(estadoInicial, 290, []);
     reactor.cambiarEstado(estadoInicial);
     reactor.cambiarEstado(instance);

@@ -92,6 +92,19 @@ describe("PlantaNuclear", () => {
     expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
   });
 
+  it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Apagado a Frio", () => {
+    reactor_nuclear = new ReactorNuclear(estadoInicial, 200, [barra1, barra2]);
+    reactor_nuclear.cambiarEstado(estadoInicial);
+    instance = new PlantaNuclear(
+      reactor_nuclear,
+      [operador1, operador2],
+      duenio
+    );
+    let horasReporte: number = 1;
+    let limite: number = 1;
+    expect(instance.iniciarSimulacion(horasReporte, limite)).toBe(0);
+  });
+
   it("deberia tener un return code de 1 ya que logra finalizar la simulacion despues de multiples horas", () => {
     let horasReporte: number = 1;
     expect(instance.iniciarSimulacion(horasReporte)).toBe(1);
