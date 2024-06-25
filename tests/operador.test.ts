@@ -14,9 +14,8 @@ describe("Operador", () => {
   let barra2: BarraDeControl;
 
   beforeEach(() => {
-    duenio = new Duenio();
+    duenio = new Duenio("Burns");
     instance = new Operador("Homero", duenio);
-    duenio.setOperadores([instance]);
     estadoInicial = new Apagado();
     let barra1 = new BarraDeControl(150);
     let barra2 = new BarraDeControl(50);

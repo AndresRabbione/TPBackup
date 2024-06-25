@@ -6,10 +6,9 @@ interface Notificable {
 }
 
 class Duenio implements Notificable {
-    - operadores: Operador[]
-
+    -nombre: String
+    
     + recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean): number
-    + setOperadores(operadores: Operador[])
 }
 
 class GestorDeOperadores {
@@ -110,7 +109,7 @@ Interface EstadoReactor {
     + cambioTemperatura(): number
 }
 
-class Frio implements Estado {
+class Frio implements EstadoReactor {
     - reactor: ReactorNuclear
 
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
@@ -175,20 +174,21 @@ enum Constantes {
     + horasLimite = 10
 }
 
-PlantaNuclear o-u- Operador
-PlantaNuclear o-l- Duenio
+PlantaNuclear *-- Operador
+PlantaNuclear o-- Duenio
+PlantaNuclear *-- ReactorNuclear
+PlantaNuclear *-- GestorDeOperadores
 
-ReactorNuclear *-u- PlantaNuclear
 ReactorNuclear *-- Sensor
-ReactorNuclear *-- Notificador
 ReactorNuclear o-- BarraDeControl
-ReactorNuclear o-l- EstadoReactor
-ReactorNuclear o-r- TablaEnergia
+ReactorNuclear *-- EstadoReactor
+ReactorNuclear *-- TablaEnergia
+ReactorNuclear o-- Reportador
 
-Constantes -- EstadoReactor
+Sensor o-- GestorDeOperadores
 
+GestorDeOperadores o-- Operador
 
-'Preguntas: ¿Como aumenta la temperatura del reactor? ¿Sola? ¿Lo simulamos?
-'Como delegamos las responsabilidades de los Operadores
+Operador o-- Duenio
 
 @enduml

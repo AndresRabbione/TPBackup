@@ -22,9 +22,8 @@ describe("Frio", () => {
   let duenio: Duenio;
 
   beforeEach(() => {
-    duenio = new Duenio();
+    duenio = new Duenio("Burns");
     operador = new Operador("Homero", duenio);
-    duenio.setOperadores([operador]);
     instance = new Frio();
     estadoInicial = new Apagado();
     reactor = new ReactorNuclear(estadoInicial, 0, []);

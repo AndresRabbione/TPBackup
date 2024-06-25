@@ -9,7 +9,7 @@ describe("Duenio", () => {
   let instance: Duenio;
 
   beforeEach(() => {
-    instance = new Duenio();
+    instance = new Duenio("Burns");
   });
 
   it("deberia ser una instancia de Duenio", () => {
@@ -21,13 +21,5 @@ describe("Duenio", () => {
     let reactor: ReactorNuclear = new ReactorNuclear(estado, 0, []);
     reactor.cambiarEstado(estado);
     expect(instance.recibirAlerta(estado, true)).toBe(1);
-  });
-
-  it("deberia cambiar los operadores por los pasados", () => {
-    let operador1: Operador = new Operador("Homero", instance);
-    let operador2: Operador = new Operador("Jorge", instance);
-    let operadores: Operador[] = [operador1, operador2];
-    instance.setOperadores(operadores);
-    expect(instance.getOperadores()).toBe(operadores);
   });
 });

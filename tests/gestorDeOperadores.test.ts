@@ -15,10 +15,9 @@ describe("GestorDeOperadores", () => {
   let reactor: ReactorNuclear;
 
   beforeEach(() => {
-    duenio = new Duenio();
+    duenio = new Duenio("Burns");
     operador1 = new Operador("Homero", duenio);
     operador2 = new Operador("Jorge", duenio);
-    duenio.setOperadores([operador1, operador2]);
     instance = new GestorDeOperadores([operador1, operador2]);
   });
 

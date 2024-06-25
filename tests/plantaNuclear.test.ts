@@ -24,7 +24,7 @@ describe("PlantaNuclear", () => {
   let barra2: BarraDeControl;
 
   beforeEach(() => {
-    duenio = new Duenio([operador1, operador2]);
+    duenio = new Duenio("Burns");
     operador1 = new Operador("Homero", duenio);
     operador2 = new Operador("Jorge", duenio);
     estadoInicial = new Apagado(reactor_nuclear);
