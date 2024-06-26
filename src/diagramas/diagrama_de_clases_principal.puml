@@ -176,14 +176,18 @@ enum Constantes {
 
 PlantaNuclear *-- Operador
 PlantaNuclear o-- Duenio
-PlantaNuclear *-- ReactorNuclear
-PlantaNuclear *-- GestorDeOperadores
+PlantaNuclear *-down- ReactorNuclear
+PlantaNuclear *-down- GestorDeOperadores
+
+Notificable <|.[hidden] Duenio
+Notificable <|.[hidden] Operador
 
 ReactorNuclear *-- Sensor
 ReactorNuclear o-- BarraDeControl
 ReactorNuclear *-- EstadoReactor
 ReactorNuclear *-- TablaEnergia
 ReactorNuclear o-- Reportador
+ReactorNuclear .[hidden]left. GestorDeOperadores
 
 Sensor o-- GestorDeOperadores
 
