@@ -1,47 +1,29 @@
-import Observer from "./observer.interface";
-import ISensor from "./sensor.interface";
+import EstadoReactor from "./estados/EstadoReactor";
+import GestorDeOperadores from "./gestorDeOperadores";
+import { Notificable } from "./notificable";
+import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
 
-export default class Sensor implements ISensor{
+export default class Sensor {
+  private observer: GestorDeOperadores | undefined;
 
-    private _temperatura: number = 0;
-  
-    private observers: Observer[] = [];
-    
-    public get temperatura(): number {
-        return this._temperatura;
-    }
-    
-    public set temperatura(value: number) {
-        this._temperatura = value;
-    }
+  constructor() {
+    this.observer = undefined;
+  }
 
-    notificar(): void {
-        for (const observer of this.observers) {
-            observer.actualizar(this);
-        }
-    }
+  public notificar(estado: EstadoReactor): void {
+    this.observer!.notificarOperadores(estado);
+  }
 
-    suscribir(observer: Observer): void {
-        const isExist = this.observers.includes(observer);
-        
-        if (isExist) {
-            return;
-        }
-        this.observers.push(observer);
-    }
+  public suscribir(observer: GestorDeOperadores): void {
+    this.observer = observer;
+  }
 
-    desuscribir(observer: Observer): void {
-        const observerIndex = this.observers.indexOf(observer);
-        
-        if (observerIndex === -1) {
-            return;
-        }
-        
-        this.observers.splice(observerIndex, 1);
-    }
+  public actualizarTemperatura(reactor: ReactorNuclear): void {
+    reactor.getEstado().checkEstado();
+    this.notificar(reactor.getEstado());
+  }
 
-    actualizarTemperatura(temperatura: number): void {
-        this._temperatura = temperatura;
-        this.notificar();
-    }
+  public getGestor(): GestorDeOperadores {
+    return this.observer!;
+  }
 }

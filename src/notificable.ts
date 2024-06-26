@@ -1,3 +1,5 @@
+import EstadoReactor from "./estados/EstadoReactor";
+
 export interface Notificable {
-  recibirAlerta(estadoReactor: Estado): void;
+  recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean): number;
 }

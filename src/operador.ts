@@ -1,14 +1,17 @@
 import BarraDeControl from "./barraDeControl";
 import { temperaturaOptima } from "./constantes";
+import Duenio from "./duenio";
+import EstadoReactor from "./estados/EstadoReactor";
 import { Notificable } from "./notificable";
+import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
 
 export default class Operador implements Notificable {
   private _nombre: String;
-  private _next: Operador | undefined;
+  private _duenio: Duenio;
 
-  constructor(nombre: String, next: Operador) {
+  constructor(nombre: String, duenio: Duenio) {
     this._nombre = nombre;
-    this._next = next;
+    this._duenio = duenio;
   }
 
   public get nombre(): String {
@@ -19,19 +22,36 @@ export default class Operador implements Notificable {
     this._nombre = nombre;
   }
 
-  public elegirBarras(temperaturaReactor: number): BarraDeControl[] {
-    if (reactor.barrasDeControl.length == 0) {
+  public insertarBarras(reactor: ReactorNuclear): BarraDeControl[] {
+    const barras: BarraDeControl[] = this.elegirBarras(reactor);
+    if (barras.length > 0) {
+      let temperaturaReactor: number = reactor.getTemperatura();
+      let decremento: number = 0;
+
+      for (let i: number = 0; i < barras.length; i++) {
+        decremento += temperaturaReactor * barras[i].calcularPorcentaje();
+        temperaturaReactor -=
+          temperaturaReactor * barras[i].calcularPorcentaje();
+      }
+
+      reactor.setTemperatura(reactor.getTemperatura() - decremento);
+
+      this.gastarBarras(reactor, barras);
+    }
+
+    reactor.getReportador().recibirReporteBarras(barras.length);
+
+    return barras;
+  }
+
+  private elegirBarras(reactor: ReactorNuclear): BarraDeControl[] {
+    if (reactor.getBarras().length == 0) {
       return [];
     }
 
-    //Este sort ordena las barras de manera ascendente por su tiempo de vida util
-    //Esta funcion se hace sobre una copia por si en algun caso futuro preservar el orden -
-    //actual del array es importante. Esto puede ser cambiado en futuro si ese no es el caso
-    const barrasOrdenadas: BarraDeControl[] = reactor.barrasDeControl.sort(
-      (a: BarraDeControl, b: BarraDeControl) =>
-        a.tiempoDeVidaUtil < b.tiempoDeVidaUtil ? -1 : 1
-    );
-    let tempActual: number = temperaturaReactor;
+    const barrasOrdenadas: BarraDeControl[] = reactor.getBarras();
+
+    let tempActual: number = reactor.getTemperatura();
     let decrementoActual: number = 0;
     let barrasFinales: BarraDeControl[] = [];
     const objetivo: number = tempActual - temperaturaOptima;
@@ -52,16 +72,32 @@ export default class Operador implements Notificable {
     return barrasFinales;
   }
 
-  public quiereManejar(): boolean {
-    if (this._next === undefined || Math.random() >= 0.5) return true;
-    return false;
+  private eliminarBarra(reactor: ReactorNuclear, barra: BarraDeControl) {
+    let index: number = reactor.getBarras().indexOf(barra);
+    reactor.getBarras().splice(index, 1);
   }
 
-  public actualizar(estadoReactor: EstadoReactor) {
-    if (this.quiereManejar()) {
-      estadoReactor.manejarSituacion(this);
-    } else {
-      this._next?.actualizar(estadoReactor);
+  private gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[]) {
+    for (const barra of barras) {
+      let j: number = reactor.getBarras().indexOf(barra);
+      reactor.getBarras()[j].bajarTiempoDeVida(50);
+      if (reactor.getBarras()[j].tiempoDeVidaUtil <= 0) {
+        this.eliminarBarra(reactor, reactor.getBarras()[j]);
+      }
     }
+  }
+
+  public recibirAlerta(estado: EstadoReactor, manejado: boolean): number {
+    if (!manejado) {
+      estado.manejarSituacion(this);
+    } else {
+      return 0;
+    }
+
+    return 1;
+  }
+
+  public notificarDuenio(estado: EstadoReactor): number {
+    return this._duenio.recibirAlerta(estado, true);
   }
 }
