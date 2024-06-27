@@ -8,14 +8,13 @@ export default class PlantaNuclear {
   private _reactor: ReactorNuclear;
   private _operadores: Operador[];
   private _duenio: Duenio;
-  private _horasOperadas: number;
   private _gestorDeOperadores: GestorDeOperadores;
+  private static _horasOperadas: number = 0;
 
   constructor(reactor: ReactorNuclear, operadores: Operador[], duenio: Duenio) {
     this._duenio = duenio;
     this._operadores = operadores;
     this._reactor = reactor;
-    this._horasOperadas = 0;
     this._gestorDeOperadores = new GestorDeOperadores(operadores);
     this._reactor.getSensor().suscribir(this._gestorDeOperadores);
   }
@@ -60,4 +59,9 @@ export default class PlantaNuclear {
   public getGestor(): GestorDeOperadores {
     return this._gestorDeOperadores;
   }
+
+  public static getHorasOperadas(): number {
+    return this._horasOperadas;
+  }
+
 }

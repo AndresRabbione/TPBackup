@@ -3,6 +3,7 @@ import EnergiaDecoratorTiempo from "../energia/decoradores/energiaDecoratorTiemp
 import EnergiaBase from "../energia/energiaBase";
 import EnergiaBaseConcreta from "../energia/energiaBaseConcreta";
 import EstadoReactor from "../estados/EstadoReactor";
+import PlantaNuclear from "../plantaNuclear";
 
 export default class ReactorNuclear {
     private _estadoActual: EstadoReactor;
