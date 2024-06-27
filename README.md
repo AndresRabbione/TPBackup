@@ -2,6 +2,21 @@
 
 Este grupo está integrado por Dario Zagarzazu, Francesca Massollo, Claudia Canta y Andres Rabbione.
 
+## Tabla de contenidos
+
+- [Intoduccion](#introduccion)
+- [Funcionamiento detallado](#funcionamiento-detallado)
+  - [Construccion](#construccion)
+  - [Operacion](#operacion)
+
+* [Instrucciones para compilacion](#instrucciones-para-compilación)
+  - [Preparando el entrono](#preparando-el-entorno)
+  - [Usar el entorno](#usar-el-entorno)
+* [Comandos utiles](#comandos-utiles)
+* [Dependencias](#dependencias)
+  - [Necesario](#necesario)
+  - [Recomendado](#recomendado)
+
 ## Introduccion
 
 _Este proyecto simula el funcionamiento de una planta nuclear utilizando una estructura orientada a objetos._
@@ -14,7 +29,21 @@ La temperatura y enrgia son reportadas en el momento con la habilidad de recibir
 
 ## Funcionamiento detallado
 
-## Instrucciones para compilación:
+_Esta seccion detalla paso a paso como se se construye la planta y se simula su operacion_
+
+### Construccion
+
+El primer objeto a construir es el reactor,
+
+El proximo objeto a llamar es la planta nuclear cuyo constructor tiene 3 parametros: Un reactor, los operadores y el duenio. La planta tambien automaticamente inicializa sus contadores, el gestor de operadores y subscribe al gestor para que pueda ser notificado.
+
+> `let plantaNuclear: PlantaNuclear = new PlantaNuclear(reactor, operadores, duenio);`
+
+Los tipos de dato esperados son: ReactorNuclear, Operador[] y Duenio respectivamente.
+
+### Operacion
+
+## Instrucciones para compilación
 
 _Para una lista de dependencias mas extensiva con links utiles, ve la seccion: [Dependencias](#dependencias)._
 
