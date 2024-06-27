@@ -1,28 +1,31 @@
+import EnergiaCapacidadDecorator from "../energia/decoradores/energiaDecoratorCapacidad";
+import EnergiaDecoratorTiempo from "../energia/decoradores/energiaDecoratorTiempo";
+import EnergiaBase from "../energia/energiaBase";
+import EnergiaBaseConcreta from "../energia/energiaBaseConcreta";
 import EstadoReactor from "../estados/EstadoReactor";
-import TablaEnergia from "../tabla_energia/tablaEnergia";
 
 export default class ReactorNuclear {
-    private estadoActual: EstadoReactor;
-    private temperatura: number;
+    private _estadoActual: EstadoReactor;
+    private _temperatura: number;
     private _energiaBase: EnergiaBase;
 
     constructor(estadoInicial: EstadoReactor, temperatura: number) {
-        this.estadoActual = estadoInicial;
-        this.temperatura = temperatura;
+        this._estadoActual = estadoInicial;
+        this._temperatura = temperatura;
         this._energiaBase = new EnergiaBaseConcreta();
     }
 
     public cambiarEstado(nuevoEstado: EstadoReactor): void {
-        this.estadoActual = nuevoEstado;
+        this._estadoActual = nuevoEstado;
         nuevoEstado.actualizarEstadoReactor(this);
     }
 
     public getTemperatura(): number {
-        return this.temperatura;
+        return this._temperatura;
     }
 
     public setTemperatura(temperatura: number): void {
-        this.temperatura = temperatura;
+        this._temperatura = temperatura;
     }
 
     public getCapacidad(): number {
@@ -30,14 +33,15 @@ export default class ReactorNuclear {
     }
 
     public energiaProducida(): number {
-        let horasOperadas = PlantaNuclear.getHorasOperadas();
-        let decoradorTiempo: EnergiaTiempoDecorator = new EnergiaTiempoDecorator(this._energiaBase, horasOperadas);
-        let decoradorCapacidad: EnergiaCapacidadDecorator = new EnergiaCapacidadDecorator(decoradorTiempo, this.getCapacidad());
+        const horasOperadas = PlantaNuclear.getHorasOperadas();
+        const decoradorTiempo: EnergiaDecoratorTiempo = new EnergiaDecoratorTiempo(this._energiaBase, horasOperadas);
+        const decoradorCapacidad: EnergiaCapacidadDecorator = new EnergiaCapacidadDecorator(decoradorTiempo, this.getCapacidad());
 
-        return decoradorCapacidad.calcularEnergiaNeta(this.getTemperatura());
+        const energia = decoradorCapacidad.calcularEnergiaNeta(this.getTemperatura());
+        return energia;
     }
     
     public manejarSitucion(): number {
-        return this.estadoActual.manejarSituacion();
+        return this._estadoActual.manejarSituacion();
     }
 }

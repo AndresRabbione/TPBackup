@@ -1,5 +1,5 @@
 import Operador from "../operador";
-import ReactorNuclear from "../reactor_nuclear/ReactorNuclear";
+import ReactorNuclear from "../reactor_nuclear/reactorNuclear";
 
 export default interface EstadoReactor {
   actualizarEstadoReactor(reactor: ReactorNuclear): void;

@@ -1,7 +1,7 @@
 import EstadoReactor from "./estados/EstadoReactor";
 import GestorDeOperadores from "./gestorDeOperadores";
 import { Notificable } from "./notificable";
-import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
+import ReactorNuclear from "./reactor_nuclear/reactorNuclear";
 
 export default class Sensor {
   private observer: GestorDeOperadores | undefined;

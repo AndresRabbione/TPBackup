@@ -1,7 +1,7 @@
 import Operador from "./operador";
 import Duenio from "./duenio";
 import { horasLimite } from "./constantes";
-import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
+import ReactorNuclear from "./reactor_nuclear/reactorNuclear";
 import GestorDeOperadores from "./gestorDeOperadores";
 
 export default class PlantaNuclear {

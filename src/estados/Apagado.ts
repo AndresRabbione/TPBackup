@@ -6,7 +6,7 @@ import {
   temperaturaOptima,
 } from "../constantes";
 import Operador from "../operador";
-import ReactorNuclear from "../reactor_nuclear/ReactorNuclear";
+import ReactorNuclear from "../reactor_nuclear/reactorNuclear";
 import EstadoReactor from "./EstadoReactor";
 import Normal from "./Normal";
 import Frio from "./frio";

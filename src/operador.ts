@@ -3,7 +3,7 @@ import { temperaturaOptima } from "./constantes";
 import Duenio from "./duenio";
 import EstadoReactor from "./estados/EstadoReactor";
 import { Notificable } from "./notificable";
-import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
+import ReactorNuclear from "./reactor_nuclear/reactorNuclear";
 
 export default class Operador implements Notificable {
   private _nombre: String;

@@ -5,7 +5,7 @@ import {
   temperaturaAlerta,
 } from "../constantes";
 import Operador from "../operador";
-import ReactorNuclear from "../reactor_nuclear/ReactorNuclear";
+import ReactorNuclear from "../reactor_nuclear/reactorNuclear";
 import Apagado from "./Apagado";
 import EstadoReactor from "./EstadoReactor";
 import Moderado from "./Moderado";
