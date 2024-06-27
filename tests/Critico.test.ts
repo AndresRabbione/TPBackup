@@ -41,15 +41,7 @@ describe("Critico", () => {
     expect(instance.calcularEnergia(700)).toBe(0);
   });
 
-  it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
-    reactor.cambiarEstado(instance);
-    instance.checkEstado();
-    expect(reactor.getEstado() instanceof Frio).toBeTruthy();
-  });
-
-  it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
-    reactor = new ReactorNuclear(estadoInicial, 230, []);
-    reactor.cambiarEstado(estadoInicial);
+  it("deberia pasar al estado correcto segun la temperatura del reactor, en este caso Frio", () => {
     reactor.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor.getEstado() instanceof Frio).toBeTruthy();
