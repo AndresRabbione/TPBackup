@@ -23,7 +23,7 @@ export default class PlantaNuclear {
     if (limite === undefined) {
       limite = horasLimite;
     }
-    console.log(`Hora: ${this._horasOperadas + 1}`);
+    console.log(`Hora: ${PlantaNuclear._horasOperadas + 1}`);
     console.log("Minuto: 0");
     this._reactor.getSensor().actualizarTemperatura(this._reactor);
     let ultimoTiempo: number = 0;
@@ -36,13 +36,13 @@ export default class PlantaNuclear {
       ultimoTiempo = i;
     }
 
-    this._horasOperadas++;
+    PlantaNuclear._horasOperadas++;
 
-    if (this._horasOperadas == horasReporte) {
+    if (PlantaNuclear._horasOperadas == horasReporte) {
       this._reactor.getReportador().recibirReporteTotal(horasReporte);
     }
 
-    if (this._horasOperadas < limite) {
+    if (PlantaNuclear._horasOperadas < limite) {
       this.iniciarSimulacion(horasReporte, limite);
       return 1;
     } else {
@@ -53,7 +53,7 @@ export default class PlantaNuclear {
 
   public finalizarSimulacion() {
     this._duenio.recibirAlerta(this._reactor.apagarReactor(), true);
-    this._reactor.getReportador().recibirReporteTotal(this._horasOperadas);
+    this._reactor.getReportador().recibirReporteTotal(PlantaNuclear._horasOperadas);
   }
 
   public getGestor(): GestorDeOperadores {
