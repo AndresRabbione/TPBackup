@@ -1,15 +1,15 @@
 import EstadoReactor from "../estados/EstadoReactor";
-import TablaEnergia from "../tablaEnergia";
+import TablaEnergia from "../tabla_energia/tablaEnergia";
 
 export default class ReactorNuclear {
     private estadoActual: EstadoReactor;
-    private tablaDeEnergia: TablaEnergia;
     private temperatura: number;
+    private _energiaBase: EnergiaBase;
 
     constructor(estadoInicial: EstadoReactor, temperatura: number) {
         this.estadoActual = estadoInicial;
-        this.tablaDeEnergia = new TablaEnergia();
         this.temperatura = temperatura;
+        this._energiaBase = new EnergiaBaseConcreta();
     }
 
     public cambiarEstado(nuevoEstado: EstadoReactor): void {
@@ -25,14 +25,18 @@ export default class ReactorNuclear {
         this.temperatura = temperatura;
     }
 
-    public energiaNetaProducida(): number {
-        return this.tablaDeEnergia.energiaNeta(this.getTemperatura());
+    public getCapacidad(): number {
+        return this._estadoActual.getCapacidad();
     }
 
     public energiaProducida(): number {
-        return this.estadoActual.calcularEnergia(this.energiaNetaProducida());
-    }
+        let horasOperadas = PlantaNuclear.getHorasOperadas();
+        let decoradorTiempo: EnergiaTiempoDecorator = new EnergiaTiempoDecorator(this._energiaBase, horasOperadas);
+        let decoradorCapacidad: EnergiaCapacidadDecorator = new EnergiaCapacidadDecorator(decoradorTiempo, this.getCapacidad());
 
+        return decoradorCapacidad.calcularEnergiaNeta(this.getTemperatura());
+    }
+    
     public manejarSitucion(): number {
         return this.estadoActual.manejarSituacion();
     }
