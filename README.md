@@ -8,12 +8,12 @@ Este grupo está integrado por Dario Zagarzazu, Francesca Massollo, Claudia Cant
 - [Funcionamiento detallado](#funcionamiento-detallado)
   - [Construccion](#construccion)
   - [Operacion](#operacion)
-
-* [Instrucciones para compilacion](#instrucciones-para-compilación)
+  - [Secuencia basica](#secuencia-basica)
+- [Instrucciones para compilacion](#instrucciones-para-compilación)
   - [Preparando el entrono](#preparando-el-entorno)
   - [Usar el entorno](#usar-el-entorno)
-* [Comandos utiles](#comandos-utiles)
-* [Dependencias](#dependencias)
+- [Comandos utiles](#comandos-utiles)
+- [Dependencias](#dependencias)
   - [Necesario](#necesario)
   - [Recomendado](#recomendado)
 
@@ -190,9 +190,10 @@ _Esta seccion detalla una secuencia del llamado de metodos empezando con una nue
 > `sensor.notificar(estado);`  
 > `gestor.notificarOperadores(estado)`  
 > `operador.recibirAlerta(estado, manejado);`  
-> `estado.manejarSituacion(operador);` > `reportador.enviarReporte(reporte);`
+> `estado.manejarSituacion(operador);`  
+> `reportador.enviarReporte(reporte);`
 
-_Tambien es una version generica ya que, por ejemplo, manejarSituacion puede llevar a insertarBarras o apagarReactor antes de reportar_
+_Tambien es una version generica ya que, por ejemplo, manejarSituacion puede llevar a insertarBarras o apagarReactor antes de reportar, o puede ocurrir un cambio de temperatura antes de llamar al sensor._
 
 ## Instrucciones para compilación
 

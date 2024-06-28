@@ -28,6 +28,11 @@ describe("Critico", () => {
     expect(instance instanceof Critico).toBeTruthy();
   });
 
+  it("deberia ser una instancia de Critico aunque no se pasen parametros al constructor.", () => {
+    instance = new Critico();
+    expect(instance instanceof Critico).toBeTruthy();
+  });
+
   it("deberia actualizar el estado del reactor a la instancia", () => {
     reactor.cambiarEstado(instance);
     expect(reactor.getEstado()).toBe(instance);

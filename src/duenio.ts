@@ -14,7 +14,8 @@ export default class Duenio implements Notificable {
     return 1;
   }
 
-  public recibirReporte(reporte: Reporte) {
+  public recibirReporte(reporte: Reporte): number {
     reporte.getDatos();
+    return 1;
   }
 }

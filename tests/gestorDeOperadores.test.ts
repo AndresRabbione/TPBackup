@@ -44,4 +44,8 @@ describe("GestorDeOperadores", () => {
     instance.sacarOperador(operador2);
     expect(instance.getOperadores().includes(operador2)).toBeFalsy();
   });
+
+  it("deberia deveolver los operadores asignados", () => {
+    expect(instance.getOperadores()).toStrictEqual([operador1, operador2]);
+  });
 });

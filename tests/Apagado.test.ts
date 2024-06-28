@@ -22,6 +22,11 @@ describe("Apagado", () => {
     expect(instance instanceof Apagado).toBeTruthy();
   });
 
+  it("deberia ser una instancia de Apagado aunque no se pasen parametros al constructor.", () => {
+    instance = new Apagado();
+    expect(instance instanceof Apagado).toBeTruthy();
+  });
+
   it("deberia tener una capacidad de 0", () => {
     expect(instance.getCapacidad()).toBe(0);
   });
@@ -47,12 +52,17 @@ describe("Apagado", () => {
     expect(reactor2.getEstado() instanceof Normal).toBeTruthy();
   });
 
-  // it("should have a method manejarSituacion()", () => {
-  //   let reactor2: ReactorNuclear = new ReactorNuclear(instance, 350, []);
-  //   reactor2.cambiarEstado(instance);
-  //   instance.manejarSituacion(operador);
-  //   expect(false).toBeTruthy();
-  // });
+  it("debreia intentar insertar barras", () => {
+    let reactor2: ReactorNuclear = new ReactorNuclear(
+      instance,
+      350,
+      [],
+      duenio
+    );
+    reactor2.cambiarEstado(instance);
+    instance.manejarSituacion(operador);
+    expect(reactor2.getTemperatura()).toBe(350);
+  });
 
   it("deberia pasar cuanto cambia la temperatura en este estado (-0.5)", () => {
     expect(instance.cambioTemperatura()).toBe(-0.5);

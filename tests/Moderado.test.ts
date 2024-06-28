@@ -28,6 +28,11 @@ describe("Moderado", () => {
     expect(instance instanceof Moderado).toBeTruthy();
   });
 
+  it("deberia ser una instancia de Moderado aunque no se pasen parametros al constructor.", () => {
+    instance = new Moderado();
+    expect(instance instanceof Moderado).toBeTruthy();
+  });
+
   it("deberia actualizar el estado del reactor a la instancia", () => {
     reactor.cambiarEstado(instance);
     expect(reactor.getEstado() instanceof Moderado).toBeTruthy();
