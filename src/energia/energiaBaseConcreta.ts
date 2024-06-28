@@ -1,10 +1,11 @@
-import { minTemperatuta, temperaturaAlerta } from "./constantes";
+import { minTemperatuta, temperaturaAlerta } from "../constantes";
+import EnergiaBase from "./energiaBase";
 
-export default class TablaEnergia {
-  private _tablaEnergia: Map<number, [number, number]>;
+export default class EnergiaBaseConcreta implements EnergiaBase {
+  private _valoresBase: Map<number, [number, number]>;
 
   constructor() {
-    this._tablaEnergia = new Map<number, [number, number]>([
+    this._valoresBase = new Map<number, [number, number]>([
       [280.0, [2100.0, 100.0]],
       [288.33, [2166.67, 116.65]],
       [296.66, [2233.34, 233.32]],
@@ -14,29 +15,19 @@ export default class TablaEnergia {
       [329.98, [2500.02, 700.0]],
     ]);
   }
-
-  private interpolarEnergia(
-    temperatura: number,
-    temperaturaInicial: number,
-    energiaInicial: number,
-    temperaturaFinal: number,
-    energiaFinal: number
-  ): number {
-    return (
-      energiaInicial +
-      ((temperatura - temperaturaInicial) * (energiaFinal - energiaInicial)) /
-        (temperaturaFinal - temperaturaInicial)
-    );
+  
+  private interpolarEnergia(temperatura: number, temperaturaInicial: number, energiaInicial: number, temperaturaFinal: number, energiaFinal: number ): number {
+    return ( energiaInicial + ((temperatura - temperaturaInicial) * (energiaFinal - energiaInicial)) / (temperaturaFinal - temperaturaInicial));
   }
 
-  public energiaNeta(temperatura: number): number {
+  public calcularEnergiaNeta(temperatura: number): number {
     if (temperatura < minTemperatuta) {
       return 0;
     } else if (temperatura >= temperaturaAlerta) {
       return 700;
     }
 
-    const energia = this._tablaEnergia.get(temperatura);
+    const energia = this._valoresBase.get(temperatura);
 
     if (energia !== undefined) {
       return energia[1];
@@ -44,7 +35,7 @@ export default class TablaEnergia {
       let temperaturaInicial = 0;
       let temperaturaFinal = 0;
 
-      for (const tempKeys of this._tablaEnergia.keys()) {
+      for (const tempKeys of this._valoresBase.keys()) {
         if (tempKeys < temperatura) {
           temperaturaInicial = tempKeys;
         } else {
@@ -53,8 +44,8 @@ export default class TablaEnergia {
         }
       }
 
-      const energiaInicial = this._tablaEnergia.get(temperaturaInicial)![1];
-      const energiaFinal = this._tablaEnergia.get(temperaturaFinal)![1];
+      const energiaInicial = this._valoresBase.get(temperaturaInicial)![1];
+      const energiaFinal = this._valoresBase.get(temperaturaFinal)![1];
 
       const resultadoInterpolacion = this.interpolarEnergia(
         temperatura,

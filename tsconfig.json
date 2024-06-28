@@ -13,18 +13,8 @@
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
     "experimentalDecorators": true,
-    "types": [
-      "node",
-      "jest"
-    ]
+    "types": ["node", "jest"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "fixtures",
-    "tmp"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "fixtures", "tmp"]
 }
