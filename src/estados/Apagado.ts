@@ -63,19 +63,19 @@ export default class Apagado implements EstadoReactor {
 
     this.reactor
       .getReportador()
+      .recibirReporteRegular(
+        this.reactor.getTemperatura(),
+        this.reactor.energiaProducida()
+      );
+
+    this.reactor
+      .getReportador()
       .enviarReporte(
         new ReporteRegular(
           this.reactor.getTemperatura(),
           this.reactor.energiaProducida()
         )
       );
-
-    // this.reactor
-    //   .getReportador()
-    //   .recibirReporteRegular(
-    //     this.reactor.getTemperatura(),
-    //     this.reactor.energiaProducida()
-    //   );
 
     return 0;
   }

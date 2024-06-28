@@ -51,7 +51,7 @@ Ahora falta construir un estado inicial para el reactor, aunque es recomendado q
 
 _Reeplaza 'Estado' por tu estado deseado_
 
-Como anteultimo paso debemos cosntruir al reactor, este requiere de un estado inicial, una temperatura, un array de barras de control y un duenio para asignar al reportador. Tambien automaticamente construye algunos componentes clave: la tabla de energia, el sensor y el reportador.
+Como anteultimo paso debemos cosntruir al reactor, este requiere de un estado inicial, una temperatura, un array de barras de control y un duenio para asignar al reportador. Tambien automaticamente construye algunos componentes clave: los decoradores que calculan la energia generada, el sensor y el reportador.
 
 _Estos componentes son explicados en mayor detalle en la siguiente seccion_
 
@@ -85,7 +85,7 @@ Al iniciar la simulacion, esta llama al sensor encontrado dentro del reactor nuc
 
 _El detalle individual de estos procesos sera explicado mas abajo._
 
-Luego continua simulando la hora actual una cierta cantidad de minutos a la vez, actualmente 5, aumentando o disminuyendo la temperatura mientras va y repitiendo la secuencia de arriba.
+Luego continua simulando la hora actual una cierta cantidad de minutos a la vez, actualmente 1, aumentando o disminuyendo la temperatura mientras va y repitiendo la secuencia de arriba.
 
 Si se encuentra que la hora actual es igual a la hora pedida para el reporte, se envia un reporte con la energia total generada hasta ese momento.
 
@@ -154,10 +154,10 @@ Las barras son el objeto mas simple, tienen un tiempo de vida util que disminuye
 
 > `porcentaje = tiempoDeVidaUtil / 3600`
 
-#### Tabla de energia
+#### Base de enregia
 
-La tabla de energia calcula la energia neta generada al nivel de temperatura actual.  
-_Para la metodologia particular, leer el archivo: tablaEnergia.ts_
+La base de energia se usa para calcular la energia generada en el momento segun la temperatura actual, esta depende de **decoradores** que toman en cuenta el tiempo transcurrido y la capacidad actual del rector, derivada de el estado.  
+_Para la metodologia particular, leer los archivos encontrados en el directorio energia_
 
 #### Duenio
 

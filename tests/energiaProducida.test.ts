@@ -6,6 +6,7 @@ import PlantaNuclear from "../src/plantaNuclear";
 
 jest.mock("../src/plantaNuclear", () => ({
   getHorasOperadas: jest.fn(() => 3),
+  getMinutosOperados: jest.fn(() => 1),
 }));
 
 describe("Método energiaProducida()", () => {

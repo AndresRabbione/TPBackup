@@ -41,7 +41,6 @@ export default class Operador implements Notificable {
     }
 
     reactor.getReportador().enviarReporte(new ReporteBarras(barras.length));
-    //reactor.getReportador().recibirReporteBarras(barras.length);
 
     return barras;
   }

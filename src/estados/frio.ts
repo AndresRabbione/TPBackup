@@ -73,6 +73,13 @@ export default class Frio implements EstadoReactor {
   public manejarSituacion(operador: Operador): number {
     this.reactor
       .getReportador()
+      .recibirReporteRegular(
+        this.reactor.getTemperatura(),
+        this.reactor.energiaProducida()
+      );
+
+    this.reactor
+      .getReportador()
       .enviarReporte(
         new ReporteRegular(
           this.reactor.getTemperatura(),
@@ -80,12 +87,6 @@ export default class Frio implements EstadoReactor {
         )
       );
 
-    // this.reactor
-    //   .getReportador()
-    //   .recibirReporteRegular(
-    //     this.reactor.getTemperatura(),
-    //     this.reactor.energiaProducida()
-    //   );
     return 0;
   }
 

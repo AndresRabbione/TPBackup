@@ -11,6 +11,7 @@ export default class PlantaNuclear {
   private _duenio: Duenio;
   private _gestorDeOperadores: GestorDeOperadores;
   private static _horasOperadas: number = 0;
+  private static _minutosOperados: number = 0;
 
   constructor(reactor: ReactorNuclear, operadores: Operador[], duenio: Duenio) {
     this._duenio = duenio;
@@ -28,10 +29,11 @@ export default class PlantaNuclear {
     console.log("Minuto: 0");
     this._reactor.getSensor().actualizarTemperatura(this._reactor);
     let ultimoTiempo: number = 0;
-    for (let i: number = 5; i <= 60; i += 5) {
+    for (let i: number = 1; i <= 60; i++) {
       console.log(`Minuto: ${i}`);
       setTimeout(() => {
-        this._reactor.cambiarTemperatura(i - ultimoTiempo);
+        PlantaNuclear._minutosOperados = i - ultimoTiempo;
+        this._reactor.cambiarTemperatura(PlantaNuclear._minutosOperados);
       }, 750);
       ultimoTiempo = i;
     }
@@ -76,5 +78,12 @@ export default class PlantaNuclear {
 
   public static getHorasOperadas(): number {
     return this._horasOperadas;
+  }
+
+  public static getMinutosOperados(): number {
+    if (this._minutosOperados == 0) {
+      return 1;
+    }
+    return this._minutosOperados;
   }
 }

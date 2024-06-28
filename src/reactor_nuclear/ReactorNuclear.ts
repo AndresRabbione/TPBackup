@@ -7,17 +7,13 @@ import Duenio from "../duenio";
 import Apagado from "../estados/Apagado";
 import EstadoReactor from "../estados/EstadoReactor";
 import PlantaNuclear from "../plantaNuclear";
-import GestorDeOperadores from "../gestorDeOperadores";
-import { Notificable } from "../notificable";
 import Reportador from "../reportador";
 import Sensor from "../sensor";
-import TablaEnergia from "../tablaEnergia";
 
 export default class ReactorNuclear {
   private estadoActual: EstadoReactor;
   private _energiaBase: EnergiaBase;
   private _energiaTotalProducida: number;
-  private _tiempoAnteriorOperado: number;
   private temperatura: number;
   private _barrasDeControl: BarraDeControl[];
   private reportador: Reportador;
@@ -39,7 +35,6 @@ export default class ReactorNuclear {
     );
     this._energiaBase = new EnergiaBaseConcreta();
     this._energiaTotalProducida = 0;
-    this._tiempoAnteriorOperado = 0;
   }
 
   public getSensor(): Sensor {
@@ -91,10 +86,8 @@ export default class ReactorNuclear {
 
   public energiaProducida(): number {
     const tiempoOperado = PlantaNuclear.getHorasOperadas();
-    const tiempoIntervalo = tiempoOperado - this._tiempoAnteriorOperado;
     const decoradorTiempo: EnergiaDecoratorTiempo = new EnergiaDecoratorTiempo(
-      this._energiaBase,
-      tiempoIntervalo
+      this._energiaBase
     );
     const decoradorCapacidad: EnergiaCapacidadDecorator =
       new EnergiaCapacidadDecorator(decoradorTiempo, this.getCapacidad());
@@ -102,7 +95,6 @@ export default class ReactorNuclear {
     const energia = decoradorCapacidad.calcularEnergiaNeta(
       this.getTemperatura()
     );
-    this._tiempoAnteriorOperado = tiempoOperado;
 
     return energia;
   }
