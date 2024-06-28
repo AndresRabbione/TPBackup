@@ -82,10 +82,15 @@ describe("ReactorNuclear", () => {
     expect(instance.getBarras()).toStrictEqual([barra1, barra2]);
   });
 
-  it("deberia camv=biar las barras al array pasado", () => {
+  it("deberia cambiar las barras al array pasado", () => {
     let barras: BarraDeControl[] = [];
     instance.setBarras(barras);
     expect(instance.getBarras()).toStrictEqual([]);
+  });
+
+  it("debe retornar la capacidad del estado actual correctamente", () => {
+    let capacidadEsperada = 0;
+    expect(instance.getCapacidad()).toBe(capacidadEsperada);
   });
 
   it("deberia devolver la energia neta generada segun la temperatura y el estado", () => {

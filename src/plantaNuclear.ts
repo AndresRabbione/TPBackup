@@ -9,14 +9,13 @@ export default class PlantaNuclear {
   private _reactor: ReactorNuclear;
   private _operadores: Operador[];
   private _duenio: Duenio;
-  private _horasOperadas: number;
   private _gestorDeOperadores: GestorDeOperadores;
+  private static _horasOperadas: number = 0;
 
   constructor(reactor: ReactorNuclear, operadores: Operador[], duenio: Duenio) {
     this._duenio = duenio;
     this._operadores = operadores;
     this._reactor = reactor;
-    this._horasOperadas = 0;
     this._gestorDeOperadores = new GestorDeOperadores(operadores);
     this._reactor.getSensor().suscribir(this._gestorDeOperadores);
   }
@@ -25,7 +24,7 @@ export default class PlantaNuclear {
     if (limite === undefined) {
       limite = horasLimite;
     }
-    console.log(`Hora: ${this._horasOperadas + 1}`);
+    console.log(`Hora: ${PlantaNuclear._horasOperadas + 1}`);
     console.log("Minuto: 0");
     this._reactor.getSensor().actualizarTemperatura(this._reactor);
     let ultimoTiempo: number = 0;
@@ -37,9 +36,9 @@ export default class PlantaNuclear {
       ultimoTiempo = i;
     }
 
-    this._horasOperadas++;
+    PlantaNuclear._horasOperadas++;
 
-    if (this._horasOperadas == horasReporte) {
+    if (PlantaNuclear._horasOperadas == horasReporte) {
       this._reactor
         .getReportador()
         .enviarReporte(
@@ -48,10 +47,9 @@ export default class PlantaNuclear {
             horasReporte
           )
         );
-      //this._reactor.getReportador().recibirReporteTotal(horasReporte);
     }
 
-    if (this._horasOperadas < limite) {
+    if (PlantaNuclear._horasOperadas < limite) {
       this.iniciarSimulacion(horasReporte, limite);
       return 1;
     } else {
@@ -67,13 +65,16 @@ export default class PlantaNuclear {
       .enviarReporte(
         new ReporteTotal(
           this._reactor.getReportador().getEnergiaTotal(),
-          this._horasOperadas
+          PlantaNuclear._horasOperadas
         )
       );
-    //this._reactor.getReportador().recibirReporteTotal(this._horasOperadas);
   }
 
   public getGestor(): GestorDeOperadores {
     return this._gestorDeOperadores;
+  }
+
+  public static getHorasOperadas(): number {
+    return this._horasOperadas;
   }
 }

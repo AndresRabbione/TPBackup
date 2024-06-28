@@ -1,7 +1,12 @@
+import EnergiaCapacidadDecorator from "../energia/decoradores/energiaDecoratorCapacidad";
+import EnergiaDecoratorTiempo from "../energia/decoradores/energiaDecoratorTiempo";
+import EnergiaBase from "../energia/energiaBase";
+import EnergiaBaseConcreta from "../energia/energiaBaseConcreta";
 import BarraDeControl from "../barraDeControl";
 import Duenio from "../duenio";
 import Apagado from "../estados/Apagado";
 import EstadoReactor from "../estados/EstadoReactor";
+import PlantaNuclear from "../plantaNuclear";
 import GestorDeOperadores from "../gestorDeOperadores";
 import { Notificable } from "../notificable";
 import Reportador from "../reportador";
@@ -10,7 +15,9 @@ import TablaEnergia from "../tablaEnergia";
 
 export default class ReactorNuclear {
   private estadoActual: EstadoReactor;
-  private tablaDeEnergia: TablaEnergia;
+  private _energiaBase: EnergiaBase;
+  private _energiaTotalProducida: number;
+  private _tiempoAnteriorOperado: number;
   private temperatura: number;
   private _barrasDeControl: BarraDeControl[];
   private reportador: Reportador;
@@ -23,7 +30,6 @@ export default class ReactorNuclear {
     duenio: Duenio
   ) {
     this.estadoActual = estadoInicial;
-    this.tablaDeEnergia = new TablaEnergia();
     this.temperatura = temperatura;
     this._barrasDeControl = barras;
     this.reportador = new Reportador(duenio);
@@ -31,6 +37,21 @@ export default class ReactorNuclear {
     this._barrasDeControl.sort((a: BarraDeControl, b: BarraDeControl) =>
       a.tiempoDeVidaUtil < b.tiempoDeVidaUtil ? -1 : 1
     );
+    this._energiaBase = new EnergiaBaseConcreta();
+    this._energiaTotalProducida = 0;
+    this._tiempoAnteriorOperado = 0;
+  }
+
+  public getSensor(): Sensor {
+    return this.sensor;
+  }
+
+  public getReportador(): Reportador {
+    return this.reportador;
+  }
+
+  public getEstado(): EstadoReactor {
+    return this.estadoActual;
   }
 
   public encenderReactor(estado: EstadoReactor) {
@@ -48,12 +69,8 @@ export default class ReactorNuclear {
     nuevoEstado.actualizarEstadoReactor(this);
   }
 
-  public getSensor(): Sensor {
-    return this.sensor;
-  }
-
-  public getEstado(): EstadoReactor {
-    return this.estadoActual;
+  public getCapacidad(): number {
+    return this.estadoActual.getCapacidad();
   }
 
   public getTemperatura(): number {
@@ -64,31 +81,38 @@ export default class ReactorNuclear {
     this.temperatura = temperatura;
   }
 
-  public getReportador(): Reportador {
-    return this.reportador;
-  }
-
   public getBarras(): BarraDeControl[] {
     return this._barrasDeControl;
   }
 
   public setBarras(barras: BarraDeControl[]) {
     this._barrasDeControl = barras;
-    this._barrasDeControl.sort((a: BarraDeControl, b: BarraDeControl) =>
-      a.tiempoDeVidaUtil < b.tiempoDeVidaUtil ? -1 : 1
-    );
-  }
-
-  private energiaNetaProducida(): number {
-    return this.tablaDeEnergia.energiaNeta(this.temperatura);
   }
 
   public energiaProducida(): number {
-    return this.estadoActual.calcularEnergia(this.energiaNetaProducida());
+    const tiempoOperado = PlantaNuclear.getHorasOperadas();
+    const tiempoIntervalo = tiempoOperado - this._tiempoAnteriorOperado;
+    const decoradorTiempo: EnergiaDecoratorTiempo = new EnergiaDecoratorTiempo(
+      this._energiaBase,
+      tiempoIntervalo
+    );
+    const decoradorCapacidad: EnergiaCapacidadDecorator =
+      new EnergiaCapacidadDecorator(decoradorTiempo, this.getCapacidad());
+
+    const energia = decoradorCapacidad.calcularEnergiaNeta(
+      this.getTemperatura()
+    );
+    this._tiempoAnteriorOperado = tiempoOperado;
+
+    return energia;
   }
 
-  public cambiarTemperatura(tiempo: number): void {
+  public cambiarTemperatura(tiempo: number) {
     this.temperatura += this.estadoActual.cambioTemperatura() * tiempo;
     this.sensor.actualizarTemperatura(this);
+  }
+
+  public energiaTotalProducida(): number {
+    return this._energiaTotalProducida;
   }
 }
