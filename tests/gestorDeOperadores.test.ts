@@ -27,7 +27,7 @@ describe("GestorDeOperadores", () => {
 
   it("deberia llegar la alerta a un operador que deberia manejar la situacion", () => {
     estadoReactor = new Critico();
-    reactor = new ReactorNuclear(estadoReactor, 400, []);
+    reactor = new ReactorNuclear(estadoReactor, 400, [], duenio);
     reactor.cambiarEstado(estadoReactor);
 
     instance.notificarOperadores(estadoReactor);

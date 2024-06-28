@@ -3,6 +3,7 @@ import Duenio from "./duenio";
 import { horasLimite } from "./constantes";
 import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
 import GestorDeOperadores from "./gestorDeOperadores";
+import ReporteTotal from "./reportes/reporteTotal";
 
 export default class PlantaNuclear {
   private _reactor: ReactorNuclear;
@@ -39,7 +40,15 @@ export default class PlantaNuclear {
     this._horasOperadas++;
 
     if (this._horasOperadas == horasReporte) {
-      this._reactor.getReportador().recibirReporteTotal(horasReporte);
+      this._reactor
+        .getReportador()
+        .enviarReporte(
+          new ReporteTotal(
+            this._reactor.getReportador().getEnergiaTotal(),
+            horasReporte
+          )
+        );
+      //this._reactor.getReportador().recibirReporteTotal(horasReporte);
     }
 
     if (this._horasOperadas < limite) {

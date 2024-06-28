@@ -1,11 +1,16 @@
+import Duenio from "./duenio";
+import { Reporte } from "./reportes/reporte";
+
 export default class Reportador {
   private _energiaTotal: number;
   private _acumuladorEstados: Map<String, number>;
+  private duenio: Duenio;
 
-  constructor() {
+  constructor(duenio: Duenio) {
     this._energiaTotal = 0;
     this._acumuladorEstados = new Map();
     this.inicializarContadorDeEventos();
+    this.duenio = duenio;
   }
 
   private inicializarContadorDeEventos(): void {
@@ -50,5 +55,17 @@ export default class Reportador {
     }
 
     return this._acumuladorEstados.get(estado);
+  }
+
+  public enviarReporte(reporte: Reporte) {
+    this.duenio.recibirReporte(reporte);
+  }
+
+  public getEnergiaTotal(): number {
+    return this._energiaTotal;
+  }
+
+  public getAcumuladorEstados(): Map<String, number> {
+    return this._acumuladorEstados;
   }
 }

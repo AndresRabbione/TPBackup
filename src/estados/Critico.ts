@@ -6,6 +6,8 @@ import {
 } from "../constantes";
 import Operador from "../operador";
 import ReactorNuclear from "../reactor_nuclear/ReactorNuclear";
+import ReporteEstados from "../reportes/reporteEstados";
+import ReporteRegular from "../reportes/reporteRegular";
 import Apagado from "./Apagado";
 import EstadoReactor from "./EstadoReactor";
 import Moderado from "./Moderado";
@@ -45,6 +47,13 @@ export default class Critico implements EstadoReactor {
       let estado: EstadoReactor = new Normal(this.reactor);
       this.reactor.cambiarEstado(estado);
       this.reactor.getReportador().recibirReporteEstado("normal");
+      this.reactor
+        .getReportador()
+        .enviarReporte(
+          new ReporteEstados(
+            this.reactor.getReportador().getAcumuladorEstados()
+          )
+        );
       return;
     } else if (
       this.reactor.getTemperatura() >= temperaturaAlerta &&
@@ -59,13 +68,27 @@ export default class Critico implements EstadoReactor {
   public manejarSituacion(operador: Operador): number {
     operador.notificarDuenio(this.reactor.apagarReactor());
     this.reactor.getReportador().recibirReporteEstado("apagado");
+    this.reactor
+      .getReportador()
+      .enviarReporte(
+        new ReporteEstados(this.reactor.getReportador().getAcumuladorEstados())
+      );
 
     this.reactor
       .getReportador()
-      .recibirReporteRegular(
-        this.reactor.getTemperatura(),
-        this.reactor.energiaProducida()
+      .enviarReporte(
+        new ReporteRegular(
+          this.reactor.getTemperatura(),
+          this.reactor.energiaProducida()
+        )
       );
+
+    // this.reactor
+    //   .getReportador()
+    //   .recibirReporteRegular(
+    //     this.reactor.getTemperatura(),
+    //     this.reactor.energiaProducida()
+    //   );
 
     return 0;
   }

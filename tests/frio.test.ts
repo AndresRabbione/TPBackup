@@ -26,7 +26,7 @@ describe("Frio", () => {
     operador = new Operador("Homero", duenio);
     instance = new Frio();
     estadoInicial = new Apagado();
-    reactor = new ReactorNuclear(estadoInicial, 0, []);
+    reactor = new ReactorNuclear(estadoInicial, 0, [], duenio);
     reactor.cambiarEstado(estadoInicial);
   });
 
@@ -48,21 +48,21 @@ describe("Frio", () => {
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
-    reactor = new ReactorNuclear(instance, 290, []);
+    reactor = new ReactorNuclear(instance, 290, [], duenio);
     reactor.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor.getEstado() instanceof Normal).toBeTruthy();
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
-    reactor = new ReactorNuclear(instance, 350, []);
+    reactor = new ReactorNuclear(instance, 350, [], duenio);
     reactor.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor.getEstado() instanceof Moderado).toBeTruthy();
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
-    reactor = new ReactorNuclear(instance, 410, []);
+    reactor = new ReactorNuclear(instance, 410, [], duenio);
     reactor.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor.getEstado() instanceof Critico).toBeTruthy();

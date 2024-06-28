@@ -7,6 +7,8 @@ import {
 } from "../constantes";
 import Operador from "../operador";
 import ReactorNuclear from "../reactor_nuclear/ReactorNuclear";
+import ReporteEstados from "../reportes/reporteEstados";
+import ReporteRegular from "../reportes/reporteRegular";
 import EstadoReactor from "./EstadoReactor";
 import Normal from "./Normal";
 import Frio from "./frio";
@@ -38,6 +40,13 @@ export default class Apagado implements EstadoReactor {
         let estado: EstadoReactor = new Normal(this.reactor);
         this.reactor.encenderReactor(estado);
         this.reactor.getReportador().recibirReporteEstado("normal");
+        this.reactor
+          .getReportador()
+          .enviarReporte(
+            new ReporteEstados(
+              this.reactor.getReportador().getAcumuladorEstados()
+            )
+          );
         return;
       } else {
         let estado: EstadoReactor = new Frio(this.reactor);
@@ -54,10 +63,19 @@ export default class Apagado implements EstadoReactor {
 
     this.reactor
       .getReportador()
-      .recibirReporteRegular(
-        this.reactor.getTemperatura(),
-        this.reactor.energiaProducida()
+      .enviarReporte(
+        new ReporteRegular(
+          this.reactor.getTemperatura(),
+          this.reactor.energiaProducida()
+        )
       );
+
+    // this.reactor
+    //   .getReportador()
+    //   .recibirReporteRegular(
+    //     this.reactor.getTemperatura(),
+    //     this.reactor.energiaProducida()
+    //   );
 
     return 0;
   }

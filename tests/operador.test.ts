@@ -19,7 +19,7 @@ describe("Operador", () => {
     estadoInicial = new Apagado();
     let barra1 = new BarraDeControl(150);
     let barra2 = new BarraDeControl(50);
-    reactor = new ReactorNuclear(estadoInicial, 330, [barra1, barra2]);
+    reactor = new ReactorNuclear(estadoInicial, 330, [barra1, barra2], duenio);
     reactor.cambiarEstado(estadoInicial);
   });
 

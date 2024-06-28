@@ -1,12 +1,14 @@
 import Reportador from "../src/reportador";
 import EstadoReactor from "../src/estados/EstadoReactor";
 import Apagado from "../src/estados/Apagado";
+import Duenio from "../src/duenio";
 
 describe("Reportador", () => {
   let instance: Reportador;
+  let duenio: Duenio;
 
   beforeEach(() => {
-    instance = new Reportador();
+    instance = new Reportador(duenio);
   });
 
   it("deberia ser una instancia de Reportador", () => {

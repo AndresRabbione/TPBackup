@@ -18,7 +18,7 @@ describe("Duenio", () => {
 
   it("deberia devolver 1 porque recibio la alerta correctamente", () => {
     let estado: EstadoReactor = new Apagado();
-    let reactor: ReactorNuclear = new ReactorNuclear(estado, 0, []);
+    let reactor: ReactorNuclear = new ReactorNuclear(estado, 0, [], instance);
     reactor.cambiarEstado(estado);
     expect(instance.recibirAlerta(estado, true)).toBe(1);
   });

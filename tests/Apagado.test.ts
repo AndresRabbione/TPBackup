@@ -13,7 +13,7 @@ describe("Apagado", () => {
 
   beforeEach(() => {
     duenio = new Duenio("Burns");
-    reactor = new ReactorNuclear(instance, 0, []);
+    reactor = new ReactorNuclear(instance, 0, [], duenio);
     instance = new Apagado(reactor);
     operador = new Operador("Homero", duenio);
   });
@@ -36,7 +36,12 @@ describe("Apagado", () => {
   });
 
   it("deberia cambiar al estado correcto segun la temperatura, en este caso Normal", () => {
-    let reactor2: ReactorNuclear = new ReactorNuclear(instance, 290, []);
+    let reactor2: ReactorNuclear = new ReactorNuclear(
+      instance,
+      290,
+      [],
+      duenio
+    );
     reactor2.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor2.getEstado() instanceof Normal).toBeTruthy();
