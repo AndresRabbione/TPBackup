@@ -62,7 +62,15 @@ export default class PlantaNuclear {
 
   public finalizarSimulacion() {
     this._duenio.recibirAlerta(this._reactor.apagarReactor(), true);
-    this._reactor.getReportador().recibirReporteTotal(this._horasOperadas);
+    this._reactor
+      .getReportador()
+      .enviarReporte(
+        new ReporteTotal(
+          this._reactor.getReportador().getEnergiaTotal(),
+          this._horasOperadas
+        )
+      );
+    //this._reactor.getReportador().recibirReporteTotal(this._horasOperadas);
   }
 
   public getGestor(): GestorDeOperadores {

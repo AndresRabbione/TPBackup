@@ -80,7 +80,7 @@ export default class ReactorNuclear {
   }
 
   private energiaNetaProducida(): number {
-    return this.tablaDeEnergia.energiaNeta(this.getTemperatura());
+    return this.tablaDeEnergia.energiaNeta(this.temperatura);
   }
 
   public energiaProducida(): number {
