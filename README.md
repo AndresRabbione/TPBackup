@@ -43,7 +43,7 @@ El siguiente objeto es el duenio de la planta cuya una propiedad requerida es su
 
 El siguiente paso es armar los operadores, estos tienen un nombre y una referencia al duenio.
 
-> `let operadores: Operador[] = [new Operador("nombre1", duenio), new Operador("nombre2", duenio), ...]`
+> `let operadores: Operador[] = [new Operador("nombre1", duenio), new Operador("nombre2", duenio), ...];`
 
 Ahora falta construir un estado inicial para el reactor, aunque es recomendado que el estado generado sea del tipo apropiado para la temperatura ingresada la simulacion toma precauciones para corregir el estado si la temperatura no coincide.
 
