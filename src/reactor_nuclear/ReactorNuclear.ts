@@ -27,6 +27,10 @@ export default class ReactorNuclear {
         nuevoEstado.actualizarEstadoReactor(this);
     }
 
+    public getEstado(): EstadoReactor {
+        return this._estadoActual;
+    }
+
     public getTemperatura(): number {
         return this._temperatura;
     }
