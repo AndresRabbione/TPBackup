@@ -9,14 +9,20 @@ export default class ReactorNuclear {
     private _estadoActual: EstadoReactor;
     private _temperatura: number;
     private _energiaBase: EnergiaBase;
+    private _energiaTotalProducida: number;
+    private _tiempoAnteriorOperado: number;
 
     constructor(estadoInicial: EstadoReactor, temperatura: number) {
         this._estadoActual = estadoInicial;
         this._temperatura = temperatura;
         this._energiaBase = new EnergiaBaseConcreta();
+        this._energiaTotalProducida = 0;
+        this._tiempoAnteriorOperado = 0;
     }
 
     public cambiarEstado(nuevoEstado: EstadoReactor): void {
+        this.acumularEnergiaProducida();
+
         this._estadoActual = nuevoEstado;
         nuevoEstado.actualizarEstadoReactor(this);
     }
@@ -34,12 +40,24 @@ export default class ReactorNuclear {
     }
 
     public energiaProducida(): number {
-        const horasOperadas = PlantaNuclear.getHorasOperadas();
-        const decoradorTiempo: EnergiaDecoratorTiempo = new EnergiaDecoratorTiempo(this._energiaBase, horasOperadas);
+        const tiempoOperado = PlantaNuclear.getHorasOperadas();
+        const tiempoIntervalo = tiempoOperado - this._tiempoAnteriorOperado;
+        const decoradorTiempo: EnergiaDecoratorTiempo = new EnergiaDecoratorTiempo(this._energiaBase, tiempoIntervalo);
         const decoradorCapacidad: EnergiaCapacidadDecorator = new EnergiaCapacidadDecorator(decoradorTiempo, this.getCapacidad());
 
         const energia = decoradorCapacidad.calcularEnergiaNeta(this.getTemperatura());
+        this._tiempoAnteriorOperado = tiempoOperado;
+
         return energia;
+    }
+
+    private acumularEnergiaProducida(): void {
+        const energiaPrevioCambio = this.energiaProducida();
+        this._energiaTotalProducida += energiaPrevioCambio;
+    }
+
+    public energiaTotalProducida(): number {
+        return this._energiaTotalProducida;
     }
     
     public manejarSitucion(): number {
