@@ -1,6 +1,7 @@
 import EstadoReactor from "./estados/EstadoReactor";
 import { Notificable } from "./notificable";
 import Operador from "./operador";
+import { Reporte } from "./reportes/reporte";
 
 export default class Duenio implements Notificable {
   private _nombre: String;
@@ -10,6 +11,11 @@ export default class Duenio implements Notificable {
 
   public recibirAlerta(estado: EstadoReactor, manejado: boolean): number {
     console.log(`El duenio recibio la notificacion`);
+    return 1;
+  }
+
+  public recibirReporte(reporte: Reporte): number {
+    reporte.getDatos();
     return 1;
   }
 }

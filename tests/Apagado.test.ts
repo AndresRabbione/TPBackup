@@ -13,12 +13,17 @@ describe("Apagado", () => {
 
   beforeEach(() => {
     duenio = new Duenio("Burns");
-    reactor = new ReactorNuclear(instance, 0, []);
+    reactor = new ReactorNuclear(instance, 0, [], duenio);
     instance = new Apagado(reactor);
     operador = new Operador("Homero", duenio);
   });
 
   it("deberia ser una instancia de Apagado", () => {
+    expect(instance instanceof Apagado).toBeTruthy();
+  });
+
+  it("deberia ser una instancia de Apagado aunque no se pasen parametros al constructor.", () => {
+    instance = new Apagado();
     expect(instance instanceof Apagado).toBeTruthy();
   });
 
@@ -36,18 +41,28 @@ describe("Apagado", () => {
   });
 
   it("deberia cambiar al estado correcto segun la temperatura, en este caso Normal", () => {
-    let reactor2: ReactorNuclear = new ReactorNuclear(instance, 290, []);
+    let reactor2: ReactorNuclear = new ReactorNuclear(
+      instance,
+      290,
+      [],
+      duenio
+    );
     reactor2.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor2.getEstado() instanceof Normal).toBeTruthy();
   });
 
-  // it("should have a method manejarSituacion()", () => {
-  //   let reactor2: ReactorNuclear = new ReactorNuclear(instance, 350, []);
-  //   reactor2.cambiarEstado(instance);
-  //   instance.manejarSituacion(operador);
-  //   expect(false).toBeTruthy();
-  // });
+  it("debreia intentar insertar barras", () => {
+    let reactor2: ReactorNuclear = new ReactorNuclear(
+      instance,
+      350,
+      [],
+      duenio
+    );
+    reactor2.cambiarEstado(instance);
+    instance.manejarSituacion(operador);
+    expect(reactor2.getTemperatura()).toBe(350);
+  });
 
   it("deberia pasar cuanto cambia la temperatura en este estado (-0.5)", () => {
     expect(instance.cambioTemperatura()).toBe(-0.5);

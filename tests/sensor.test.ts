@@ -24,7 +24,7 @@ describe("Sensor", () => {
     gestor = new GestorDeOperadores([operador1, operador2]);
     instance = new Sensor();
     estado = new Critico();
-    reactor = new ReactorNuclear(estado, 400, []);
+    reactor = new ReactorNuclear(estado, 400, [], duenio);
   });
 
   it("deberia ser una instancia de Sensor", () => {

@@ -20,11 +20,16 @@ describe("Moderado", () => {
     operador = new Operador("Homero", duenio);
     instance = new Moderado();
     estadoInicial = new Apagado();
-    reactor = new ReactorNuclear(estadoInicial, 0, []);
+    reactor = new ReactorNuclear(estadoInicial, 0, [], duenio);
     reactor.cambiarEstado(estadoInicial);
   });
 
   it("deberia ser una instancia de Moderado", () => {
+    expect(instance instanceof Moderado).toBeTruthy();
+  });
+
+  it("deberia ser una instancia de Moderado aunque no se pasen parametros al constructor.", () => {
+    instance = new Moderado();
     expect(instance instanceof Moderado).toBeTruthy();
   });
 
@@ -50,14 +55,14 @@ describe("Moderado", () => {
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor, en este caso Normal", () => {
-    reactor = new ReactorNuclear(instance, 300, []);
+    reactor = new ReactorNuclear(instance, 300, [], duenio);
     reactor.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor.getEstado() instanceof Normal).toBeTruthy();
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor, en este caso Critico", () => {
-    reactor = new ReactorNuclear(instance, 420, []);
+    reactor = new ReactorNuclear(instance, 420, [], duenio);
     reactor.cambiarEstado(instance);
     instance.checkEstado();
     expect(reactor.getEstado() instanceof Critico).toBeTruthy();

@@ -30,7 +30,12 @@ describe("PlantaNuclear", () => {
     estadoInicial = new Apagado(reactor_nuclear);
     barra1 = new BarraDeControl(150);
     barra2 = new BarraDeControl(200);
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 310, [barra1, barra2]);
+    reactor_nuclear = new ReactorNuclear(
+      estadoInicial,
+      310,
+      [barra1, barra2],
+      duenio
+    );
     reactor_nuclear.cambiarEstado(estadoInicial);
     reactor_nuclear.encenderReactor(new Moderado(reactor_nuclear));
     instance = new PlantaNuclear(
@@ -51,7 +56,12 @@ describe("PlantaNuclear", () => {
   });
 
   it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Frio a Moderado", () => {
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 390, [barra1, barra2]);
+    reactor_nuclear = new ReactorNuclear(
+      estadoInicial,
+      390,
+      [barra1, barra2],
+      duenio
+    );
     reactor_nuclear.cambiarEstado(estadoInicial);
     reactor_nuclear.encenderReactor(new Frio(reactor_nuclear));
     instance = new PlantaNuclear(
@@ -65,7 +75,12 @@ describe("PlantaNuclear", () => {
   });
 
   it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Frio a Critico", () => {
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 450, [barra1, barra2]);
+    reactor_nuclear = new ReactorNuclear(
+      estadoInicial,
+      450,
+      [barra1, barra2],
+      duenio
+    );
     reactor_nuclear.cambiarEstado(estadoInicial);
     reactor_nuclear.encenderReactor(new Frio(reactor_nuclear));
     instance = new PlantaNuclear(
@@ -79,7 +94,12 @@ describe("PlantaNuclear", () => {
   });
 
   it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Normal a Critico", () => {
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 450, [barra1, barra2]);
+    reactor_nuclear = new ReactorNuclear(
+      estadoInicial,
+      450,
+      [barra1, barra2],
+      duenio
+    );
     reactor_nuclear.cambiarEstado(estadoInicial);
     reactor_nuclear.encenderReactor(new Normal(reactor_nuclear));
     instance = new PlantaNuclear(
@@ -93,7 +113,12 @@ describe("PlantaNuclear", () => {
   });
 
   it("deberia tener un return code de 0 ya que logra finalizar la simulacion despues de la primera hora, esta prueba tambien pasa de Apagado a Frio", () => {
-    reactor_nuclear = new ReactorNuclear(estadoInicial, 200, [barra1, barra2]);
+    reactor_nuclear = new ReactorNuclear(
+      estadoInicial,
+      200,
+      [barra1, barra2],
+      duenio
+    );
     reactor_nuclear.cambiarEstado(estadoInicial);
     instance = new PlantaNuclear(
       reactor_nuclear,

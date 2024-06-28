@@ -1,4 +1,5 @@
 import BarraDeControl from "../barraDeControl";
+import Duenio from "../duenio";
 import Apagado from "../estados/Apagado";
 import EstadoReactor from "../estados/EstadoReactor";
 import GestorDeOperadores from "../gestorDeOperadores";
@@ -18,13 +19,14 @@ export default class ReactorNuclear {
   constructor(
     estadoInicial: EstadoReactor,
     temperatura: number,
-    barras: BarraDeControl[]
+    barras: BarraDeControl[],
+    duenio: Duenio
   ) {
     this.estadoActual = estadoInicial;
     this.tablaDeEnergia = new TablaEnergia();
     this.temperatura = temperatura;
     this._barrasDeControl = barras;
-    this.reportador = new Reportador();
+    this.reportador = new Reportador(duenio);
     this.sensor = new Sensor();
     this._barrasDeControl.sort((a: BarraDeControl, b: BarraDeControl) =>
       a.tiempoDeVidaUtil < b.tiempoDeVidaUtil ? -1 : 1
@@ -78,7 +80,7 @@ export default class ReactorNuclear {
   }
 
   private energiaNetaProducida(): number {
-    return this.tablaDeEnergia.energiaNeta(this.getTemperatura());
+    return this.tablaDeEnergia.energiaNeta(this.temperatura);
   }
 
   public energiaProducida(): number {

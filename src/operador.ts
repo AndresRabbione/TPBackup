@@ -4,6 +4,7 @@ import Duenio from "./duenio";
 import EstadoReactor from "./estados/EstadoReactor";
 import { Notificable } from "./notificable";
 import ReactorNuclear from "./reactor_nuclear/ReactorNuclear";
+import ReporteBarras from "./reportes/reporteBarras";
 
 export default class Operador implements Notificable {
   private _nombre: String;
@@ -39,7 +40,8 @@ export default class Operador implements Notificable {
       this.gastarBarras(reactor, barras);
     }
 
-    reactor.getReportador().recibirReporteBarras(barras.length);
+    reactor.getReportador().enviarReporte(new ReporteBarras(barras.length));
+    //reactor.getReportador().recibirReporteBarras(barras.length);
 
     return barras;
   }

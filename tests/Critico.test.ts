@@ -20,11 +20,16 @@ describe("Critico", () => {
     operador = new Operador("Homero", duenio);
     instance = new Critico();
     estadoInicial = new Apagado();
-    reactor = new ReactorNuclear(estadoInicial, 0, []);
+    reactor = new ReactorNuclear(estadoInicial, 0, [], duenio);
     reactor.cambiarEstado(estadoInicial);
   });
 
   it("instance deberia ser una instancia de Critico", () => {
+    expect(instance instanceof Critico).toBeTruthy();
+  });
+
+  it("deberia ser una instancia de Critico aunque no se pasen parametros al constructor.", () => {
+    instance = new Critico();
     expect(instance instanceof Critico).toBeTruthy();
   });
 
@@ -48,7 +53,7 @@ describe("Critico", () => {
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
-    reactor = new ReactorNuclear(estadoInicial, 290, []);
+    reactor = new ReactorNuclear(estadoInicial, 290, [], duenio);
     reactor.cambiarEstado(estadoInicial);
     reactor.cambiarEstado(instance);
     instance.checkEstado();
@@ -56,7 +61,7 @@ describe("Critico", () => {
   });
 
   it("deberia pasar al estado correcto segun la temperatura del reactor", () => {
-    reactor = new ReactorNuclear(estadoInicial, 350, []);
+    reactor = new ReactorNuclear(estadoInicial, 350, [], duenio);
     reactor.cambiarEstado(estadoInicial);
     reactor.cambiarEstado(instance);
     instance.checkEstado();

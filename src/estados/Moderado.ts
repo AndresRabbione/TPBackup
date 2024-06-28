@@ -6,6 +6,8 @@ import {
 } from "../constantes";
 import Operador from "../operador";
 import ReactorNuclear from "../reactor_nuclear/ReactorNuclear";
+import ReporteEstados from "../reportes/reporteEstados";
+import ReporteRegular from "../reportes/reporteRegular";
 import Critico from "./Critico";
 import EstadoReactor from "./EstadoReactor";
 import Normal from "./Normal";
@@ -42,11 +44,25 @@ export default class Moderado implements EstadoReactor {
       let estado: EstadoReactor = new Normal(this.reactor);
       this.reactor.cambiarEstado(estado);
       this.reactor.getReportador().recibirReporteEstado("normal");
+      this.reactor
+        .getReportador()
+        .enviarReporte(
+          new ReporteEstados(
+            this.reactor.getReportador().getAcumuladorEstados()
+          )
+        );
       return;
     } else if (this.reactor.getTemperatura() >= maxTemperatura) {
       let estado: EstadoReactor = new Critico(this.reactor);
       this.reactor.cambiarEstado(estado);
       this.reactor.getReportador().recibirReporteEstado("critico");
+      this.reactor
+        .getReportador()
+        .enviarReporte(
+          new ReporteEstados(
+            this.reactor.getReportador().getAcumuladorEstados()
+          )
+        );
       return;
     }
   }
@@ -56,10 +72,19 @@ export default class Moderado implements EstadoReactor {
 
     this.reactor
       .getReportador()
-      .recibirReporteRegular(
-        this.reactor.getTemperatura(),
-        this.reactor.energiaProducida()
+      .enviarReporte(
+        new ReporteRegular(
+          this.reactor.getTemperatura(),
+          this.reactor.energiaProducida()
+        )
       );
+
+    // this.reactor
+    //   .getReportador()
+    //   .recibirReporteRegular(
+    //     this.reactor.getTemperatura(),
+    //     this.reactor.energiaProducida()
+    //   );
 
     return 0;
   }

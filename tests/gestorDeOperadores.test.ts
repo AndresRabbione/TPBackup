@@ -27,7 +27,7 @@ describe("GestorDeOperadores", () => {
 
   it("deberia llegar la alerta a un operador que deberia manejar la situacion", () => {
     estadoReactor = new Critico();
-    reactor = new ReactorNuclear(estadoReactor, 400, []);
+    reactor = new ReactorNuclear(estadoReactor, 400, [], duenio);
     reactor.cambiarEstado(estadoReactor);
 
     instance.notificarOperadores(estadoReactor);
@@ -43,5 +43,9 @@ describe("GestorDeOperadores", () => {
   it("deberia sacar al operador pasado de el array de operadores existentes", () => {
     instance.sacarOperador(operador2);
     expect(instance.getOperadores().includes(operador2)).toBeFalsy();
+  });
+
+  it("deberia deveolver los operadores asignados", () => {
+    expect(instance.getOperadores()).toStrictEqual([operador1, operador2]);
   });
 });

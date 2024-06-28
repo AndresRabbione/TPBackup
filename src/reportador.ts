@@ -1,11 +1,16 @@
+import Duenio from "./duenio";
+import { Reporte } from "./reportes/reporte";
+
 export default class Reportador {
   private _energiaTotal: number;
   private _acumuladorEstados: Map<String, number>;
+  private duenio: Duenio;
 
-  constructor() {
+  constructor(duenio: Duenio) {
     this._energiaTotal = 0;
     this._acumuladorEstados = new Map();
     this.inicializarContadorDeEventos();
+    this.duenio = duenio;
   }
 
   private inicializarContadorDeEventos(): void {
@@ -13,33 +18,8 @@ export default class Reportador {
     estados.forEach((estado) => this._acumuladorEstados.set(estado, 0));
   }
 
-  public recibirReporteRegular(temperatura: number, energia: number): number[] {
+  public recibirReporteRegular(temperatura: number, energia: number) {
     this._energiaTotal += energia;
-
-    console.log(
-      `Temperatura actual: ${temperatura}  Energia producida: ${energia}`
-    );
-
-    return [temperatura, energia];
-  }
-
-  public recibirReporteBarras(barras: number): number {
-    console.log(`Barras insertadas: ${barras}`);
-    if (barras == 0) {
-      console.log(
-        `AVISO: No se insertaron barras, es recomendado apagar el reactor y reeemplazar las barras usadas.`
-      );
-    }
-
-    return barras;
-  }
-
-  public recibirReporteTotal(horasReporte: number): number {
-    console.log(
-      `Despues de ${horasReporte} hora(s) se genero ${this._energiaTotal} MWe`
-    );
-
-    return this._energiaTotal;
   }
 
   public recibirReporteEstado(estado: String) {
@@ -50,5 +30,17 @@ export default class Reportador {
     }
 
     return this._acumuladorEstados.get(estado);
+  }
+
+  public enviarReporte(reporte: Reporte) {
+    this.duenio.recibirReporte(reporte);
+  }
+
+  public getEnergiaTotal(): number {
+    return this._energiaTotal;
+  }
+
+  public getAcumuladorEstados(): Map<String, number> {
+    return this._acumuladorEstados;
   }
 }
