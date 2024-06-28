@@ -23,8 +23,6 @@ describe("Método energiaProducida()", () => {
   });
 
   it("debe calcular la energía producida correctamente basada en un intervalo de tiempo", () => {
-    let tiempoAnteriorOperadoMock = 2;
-    reactor["_tiempoAnteriorOperado"] = tiempoAnteriorOperadoMock;
     PlantaNuclear.getHorasOperadas();
 
     expect(require("../src/plantaNuclear").getHorasOperadas).toHaveBeenCalled();
@@ -33,8 +31,8 @@ describe("Método energiaProducida()", () => {
     let energiaBaseMock = 700.0;
     let energiaEsperada =
       energiaBaseMock *
-      (PlantaNuclear.getHorasOperadas() - tiempoAnteriorOperadoMock) *
+      PlantaNuclear.getMinutosOperados() *
       reactor.getCapacidad();
-    expect(energiaProducida).toBe(energiaEsperada);
+    expect(energiaProducida).toBe(energiaEsperada / 60);
   });
 });

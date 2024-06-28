@@ -27,7 +27,7 @@ describe("Test clase EnergiaDecoratorTiempo", () => {
         mockEnergiaBase.calcularEnergiaNeta(temperatura);
       const resultado = decorator.calcularEnergiaNeta(temperatura);
 
-      expect(resultado).toBe(energiaBaseCalculada);
+      expect(resultado).toBe(energiaBaseCalculada / 60);
     });
 
     it("debe manejar correctamente el cálculo con temperatura negativa", () => {
