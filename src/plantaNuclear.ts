@@ -34,10 +34,6 @@ export default class PlantaNuclear {
       console.log(`Minuto: ${i}`);
       PlantaNuclear._minutosOperados = i - ultimoTiempo;
       this._reactor.cambiarTemperatura(PlantaNuclear._minutosOperados);
-      // setTimeout(() => {
-      //   PlantaNuclear._minutosOperados = i - ultimoTiempo;
-      //   this._reactor.cambiarTemperatura(PlantaNuclear._minutosOperados);
-      // }, 750);
       ultimoTiempo = i;
     }
 
