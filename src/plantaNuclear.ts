@@ -29,12 +29,11 @@ export default class PlantaNuclear {
     console.log("Minuto: 0");
     this._reactor.getSensor().actualizarTemperatura(this._reactor);
     let ultimoTiempo: number = 0;
+
     for (let i: number = 1; i <= 60; i++) {
       console.log(`Minuto: ${i}`);
-      setTimeout(() => {
-        PlantaNuclear._minutosOperados = i - ultimoTiempo;
-        this._reactor.cambiarTemperatura(PlantaNuclear._minutosOperados);
-      }, 750);
+      PlantaNuclear._minutosOperados = i - ultimoTiempo;
+      this._reactor.cambiarTemperatura(PlantaNuclear._minutosOperados);
       ultimoTiempo = i;
     }
 
