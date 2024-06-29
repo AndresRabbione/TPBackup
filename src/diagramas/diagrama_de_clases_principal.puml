@@ -1,106 +1,46 @@
-@startuml Planta Nuclear
+@startuml PlantaNuclear
 title Diagrama de Clases - Planta Nuclear
 
-interface Notificable {
-    + recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean): number
+interface EnergiaBase {
+    calcularEnergiaNeta(temperatura: number): number
 }
 
-class Duenio implements Notificable {
-    -nombre: String
-    
-    + recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean): number
+class EnergiaBaseConcreta implements EnergiaBase {
+    - valoresBase: Map <number, [number, number]>
+
+    - interpolarEnergia(): number
+    + calcularEnergiaNeta(temperatura: number): number
 }
 
-class GestorDeOperadores {
-    - operadores: Operador[]
-    - indiceActual: number
+abstract class EnergiaDecorator implements EnergiaBase {
+    # energia: EnergiaBase
 
-    + notificarOperadores(estadoReactor: EstadoReactor)
-    + agregarOperador(operador: Operador)
-    + sacarOperador(operador: Operador)
-    + getOperadores(): Operador[]
+    + {abstract} calcularEnergiaNeta(temperatura: number): number
 }
 
-class Operador implements Notificable {
-    - nombre: String
-    - duenio: Duenio
+class EnergiaDecoratorCapacidad extends EnergiaDecorator {
+    - capacidad: number
 
-    + insertarBarras(reactor: ReactorNuclear): BarraDeControl[]
-    - elegirBarras(reactor: ReactorNuclear): BarraDeControl[]
-    - eliminarBarra(reactor: ReactorNuclear, barra: BarraDeControl)
-    - gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[])
-    + recibirAlerta(estado: EstadoReactor, manejado: boolean): number
-    + notificarDuenio(estado: EstadoReactor): number
+    + calcularEnergiaNeta(temperatura: number): number
 }
 
-class Reportador {
-    - energiaTotal: number
-    - acumuladorEstados: Map<String, number>
-
-    - inicializarContadorDeEventos()
-    + recibirReporteRegular(temperatura: number, energia: number): number[]
-    + recibirReporteBarras(barras: number): number
-    + recibirReporteTotal(horasReporte: number)
-    + recibirReporteEstado(estado: String)
+class EnergiaDecoratorTiempo extends EnergiaDecorator {
+    + calcularEnergiaNeta(temperatura: number): number
 }
 
-class PlantaNuclear {
+interface EstadoReactor {
+    actualizarEstadoReactor(reactor: ReactorNuclear): void
+    getCapacidad(): number
+    calcularEnergia(energiaProducida: number): number
+    checkEstado(): void
+    manejarSituacion(operador: Operador): number
+    cambioTemperatura(): number
+}
+
+class Apagado implements EstadoReactor {
     - reactor: ReactorNuclear
-    - operadores: Operador[]
-    - duenio: Duenio
-    - horasOperadas: number
-    - gestorDeOperadores: GestorDeOperadores
+    - clave: clave
 
-    + iniciarSimulacion(horasReporte: number, limite?: number): number
-    + finalizarSimulacion()
-    + getGestor(): GestorDeOperadores
-}
-
-class ReactorNuclear {
-    - estadoActual: EstadoReactor
-    - tablaDeEnergia: TablaEnergia
-    - temperatura: number
-    - barrasDeControl: BarraDeControl[]
-    - sensor: Sensor
-    - reportador: Reportador
-
-    + encenderReactor(estado: EstadoReactor)
-    + apagarReactor(): EstadoReactor
-    + cambiarEstado(nuevoEstado: EstadoReactor)
-    + getSensor(): Sensor
-    + getEstado(): EstadoReactor
-    + getTemperatura(): number
-    + setTemperatura(temperatura: number)
-    + getReportador(): Reportador
-    + getBarras(): BarraDeControl[]
-    + setBarras(barras: BarraDeControl[])
-    - energiaNetaProducida(): number
-    + cambiarTemperatura(tiempo: number)
-}
-
-class Sensor {
-    - observer: GestorDeOperadores | undefined
-
-    + notificar(estado: EstadoReactor)
-    + suscribir(observer: GestorDeOperadores)
-    + actualizarTemperatura(reactor: ReactorNuclear)
-}
-
-class BarraDeControl {
-    + tiempoDeVidaUtil : number
-    
-    + bajarTiempoDeVida(decremento: number)
-    + calcularPorcentaje() : number
-}
-
-class TablaEnergia {
-    - tablaEnergia: Map<number, [number, number]>
-
-    - interpolarEnergia(temperatura: number, temperaturaInicial: number, energiaInicial: number, temperaturaFinal: number, energiaFinal: number): number
-    + energiaNeta(temperatura: number): number
-}
-
-Interface EstadoReactor {
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
@@ -115,18 +55,19 @@ class Frio implements EstadoReactor {
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + checkEstado()
+    + checkEstado(): void
     + manejarSituacion(operador: Operador): number
     + cambioTemperatura(): number
 }
 
 class Normal implements EstadoReactor {
     - reactor: ReactorNuclear
+    - clave: clave
 
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + checkEstado()
+    + checkEstado(): void
     + manejarSituacion(operador: Operador): number
     + cambioTemperatura(): number
 }
@@ -137,62 +78,187 @@ class Moderado implements EstadoReactor {
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + checkEstado()
+    + checkEstado(): void
     + manejarSituacion(operador: Operador): number
     + cambioTemperatura(): number
 }
 
 class Critico implements EstadoReactor {
     - reactor: ReactorNuclear
+    - clave: clave
 
     + actualizarEstadoReactor(reactor: ReactorNuclear): void
     + getCapacidad(): number
     + calcularEnergia(energiaProducida: number): number
-    + checkEstado()
+    + checkEstado(): void
     + manejarSituacion(operador: Operador): number
     + cambioTemperatura(): number
 }
 
-class Apagado implements EstadoReactor {
+class ReactorNuclear {
+    - estadoActual: EstadoReactor
+    - energiaBase: EnergiaBase
+    - energiaTotalProducida: number
+    - temperatura: number
+    - barrasDeControl: BarraDeControl[]
+    - reportador: Reportador
+    - sensor: Sensor
+
+    + getSensor(): Sensor
+    + getReportador(): Reportador
+    + getEstado(): EstadoReactor
+    + encenderReactor(estado: EstadoReactor): void
+    + apagarReactor(): EstadoReactor
+    + cambiarEstado(nuevoEstado: EstadoReactor): void
+    + getCapacidad(): number
+    + getTemperatura(): number
+    + setTemperatura(temperatura: number): void
+    + getBarras(): BarraDeControl[]
+    + setBarras(barras: BarraDeControl[]): void
+    + energiaProducida(): number
+    + cambiarTemperatura(tiempo: number): void
+    + energiaTotalProducida(): number
+}
+
+interface Reporte {
+    getDatos(): void
+}
+
+class ReporteBarras implements Reporte {
+    - cantBarras: number
+
+    + getDatos(): void
+}
+
+class ReporteEstados implements Reporte {
+    - contadorEstados: Map<String, number>
+
+    + getDatos(): void
+}
+
+class ReporteRegular implements Reporte {
+    - temperatura: number
+    - energia: number
+
+    + getDatos(): void
+}
+
+class ReporteTotal implements Reporte { 
+    - energiaTotal: number;
+    - horasReporte: number;
+
+    + getDatos(): void
+}
+
+class BarraDeControl {
+    - tiempoDeVidaUtil: number
+
+    + tiempoDeVidaUtil(): number
+    + bajarTiempoDeVida(decremento: number): void
+    + calcularPorcentaje(): number
+}
+
+class GestorDeOperadores {
+    - operadores: Operador[]
+    - indiceActual: number
+
+    + notificarOperadores(estadoReactor: EstadoReactor): void
+    + agregarOperador(operador: Operador): void
+    + sacarOperador(operador: Operador): void
+    + getOperadores(): Operador[]
+}
+
+interface Notificable {
+    recibirAlerta(estadoReactor: EstadoReactor, manejado: boolean): number
+}
+
+class Duenio implements Notificable {
+    - nombre: String
+
+    + recibirAlerta(estado: EstadoReactor, manejado: boolean): number
+    + recibirReporte(reporte: Reporte): number
+}
+
+class Operador implements Notificable {
+    - nombre: String
+    - duenio: Duenio
+
+    - elegirBarras(reactor: ReactorNuclear): BarraDeControl[]
+    - eliminarBarra(reactor: ReactorNuclear, barra: BarraDeControl)
+    - gastarBarras(reactor: ReactorNuclear, barras: BarraDeControl[])
+    + recibirAlerta(estado: EstadoReactor, manejado: boolean): number
+    + notificarDuenio(estado: EstadoReactor): number
+    + getNombre(): String
+    + setNombre(nombre: String): void
+    + insertarBarras(reactor: ReactorNuclear): BarraDeControl[]
+}
+
+class PlantaNuclear {
     - reactor: ReactorNuclear
+    - operadores: Operador[]
+    - duenio: Duenio
+    - gestorDeOperadores: GestorDeOperadores
+    - {static} horasOperadas: number
+    - {static} minutosOperados: number
 
-    + actualizarEstadoReactor(reactor: ReactorNuclear): void
-    + getCapacidad(): number
-    + calcularEnergia(energiaProducida: number): number
-    + checkEstado()
-    + manejarSituacion(operador: Operador): number
-    + cambioTemperatura(): number
+    + iniciarSimulacion(horasReporte: number, limite?: number): number
+    + finalizarSimulacion(): void
+    + getGestor(): GestorDeOperadores
+    + {static} getHorasOperadas(): number
+    + {static} getMinutosOperados(): number
 }
 
-enum Constantes {
-    + maxTemperatura = 400
-    + temperaturaAlerta = 330
-    + minTemperatura = 280
-    + cambioTemperaturaPorMinuto = 0.5
-    + cambioTemperaturaPorHora = 30
-    + temperaturaOptima = temperaturaAlerta - cambioTemperaturaPorHora
-    + horasLimite = 10
+class Reportador {
+    - energiaTotal: number
+    - acumuladorEstados: Map<String, number>
+    - duenio: Duenio;
+
+    - inicializarContadorDeEventos(): void
+    + recibirReporteRegular(temperatura: number, energia: number): void
+    + recibirReporteEstado(estado: String)
+    + enviarReporte(reporte: Reporte): void
+    + getEnergiaTotal(): number
+    + getAcumuladorEstados(): Map<String, number>
 }
 
-PlantaNuclear *-- Operador
-PlantaNuclear o-- Duenio
+class Sensor {
+    - observer: GestorDeOperadores | undefined
+
+    + notificar(estado: EstadoReactor): void
+    + suscribir(observer: GestorDeOperadores): void
+    + actualizarTemperatura(reactor: ReactorNuclear): void
+    + getGestor(): GestorDeOperadores
+}
+
+
+'Relaciones
 PlantaNuclear *-down- ReactorNuclear
 PlantaNuclear *-down- GestorDeOperadores
+PlantaNuclear o-left- Operador
+PlantaNuclear o-left- Duenio
 
-Notificable <|.[hidden] Duenio
-Notificable <|.[hidden] Operador
-
-ReactorNuclear *-- Sensor
-ReactorNuclear o-- BarraDeControl
 ReactorNuclear *-- EstadoReactor
-ReactorNuclear *-- TablaEnergia
-ReactorNuclear o-- Reportador
-ReactorNuclear .[hidden]left. GestorDeOperadores
+ReactorNuclear *-down- EnergiaBase
+ReactorNuclear *-down- Sensor
+ReactorNuclear o-- BarraDeControl
+ReactorNuclear o-left- Reportador
 
-Sensor o-- GestorDeOperadores
+Duenio ..> Reporte
 
-GestorDeOperadores o-- Operador
+GestorDeOperadores *-- Operador
+GestorDeOperadores ..> EstadoReactor
+
+Notificable ..> EstadoReactor
 
 Operador o-- Duenio
+Operador ..> BarraDeControl
+Operador .left.> ReactorNuclear
+Operador ..> EstadoReactor
+
+Reportador ..> Duenio
+Reportador .down.> Reporte
+
+Sensor ..> GestorDeOperadores
+Sensor ..> EstadoReactor
 
 @enduml
