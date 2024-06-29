@@ -8,6 +8,7 @@ describe("Reportador", () => {
   let duenio: Duenio;
 
   beforeEach(() => {
+    let duenio: Duenio = new Duenio("Burns");
     instance = new Reportador(duenio);
   });
 
