@@ -17,7 +17,7 @@ Sensor --> EstadoReactor: Chequea el estado
 Sensor --> Operadores: Notifica del estado
 Operadores --> EstadoReactor: Manejan la situacion
 EstadoReactor --> Reportador: Envia un reporte de la situacion
-Reportador --> Usuario: Envia el reporte con la temperatura
+Reportador --> Duenio: Envia el reporte con la temperatura
 
 
 @enduml
