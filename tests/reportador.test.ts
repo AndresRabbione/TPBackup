@@ -1,27 +1,50 @@
 import Reportador from "../src/reportador";
-import EstadoReactor from "../src/estados/EstadoReactor";
-import Apagado from "../src/estados/Apagado";
+import { Reporte } from "../src/reportes/reporte";
 import Duenio from "../src/duenio";
 
-describe("Reportador", () => {
-  let instance: Reportador;
-  let duenio: Duenio;
+jest.mock("../src/duenio");
+
+describe("Test clase Reportador", () => {
+  let reportador: Reportador;
+  let mockDuenio: jest.Mocked<Duenio>;
 
   beforeEach(() => {
-    let duenio: Duenio = new Duenio("Burns");
-    instance = new Reportador(duenio);
+    mockDuenio = new Duenio("Burns") as jest.Mocked<Duenio>;
+    reportador = new Reportador(mockDuenio);
+  });
+  
+  it("debe ser una instancia de Reportador", () => {
+    expect(reportador instanceof Reportador).toBeTruthy();
   });
 
-  it("deberia ser una instancia de Reportador", () => {
-    expect(instance instanceof Reportador).toBeTruthy();
+ it("debe inicializar la energia total y el acumulador de estados", () => {
+      expect(reportador.getEnergiaTotal()).toBe(0);
+      expect(reportador.getAcumuladorEstados().size).toBe(3);
+      expect(reportador.getAcumuladorEstados().get("apagado")).toBe(0);
+      expect(reportador.getAcumuladorEstados().get("normal")).toBe(0);
+      expect(reportador.getAcumuladorEstados().get("critico")).toBe(0);
+  });
+  
+  it("debe guardar la energia total", () => {
+    let mockTemperatura = 329;
+    let mockEnergia = 700;
+    let energiaEsperada = 700;
+
+    reportador.recibirReporteRegular(mockTemperatura, mockEnergia);
+    expect(reportador.getEnergiaTotal()).toBe(energiaEsperada);
+  });
+  
+  it("debe guardar cuántas veces estuvo en el estado pasado", () => {
+    expect(reportador.recibirReporteEstado("apagado")).toBe(1);
   });
 
-  it("deberia guardar la energia total", () => {
-    instance.recibirReporteRegular(329, 700);
-    expect(instance.getEnergiaTotal()).toBe(700);
+  it('debe enviar el reporte al dueño', () => {
+    const mockReporte: Reporte = {
+      getDatos: jest.fn()
+    };
+
+    reportador.enviarReporte(mockReporte);
+    expect(mockDuenio.recibirReporte).toHaveBeenCalledWith(mockReporte);
   });
 
-  it("deberia guardar cunatas veces estuvo en el estado pasado", () => {
-    expect(instance.recibirReporteEstado("apagado")).toBe(1);
-  });
-});
+}); 
