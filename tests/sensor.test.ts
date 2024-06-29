@@ -1,45 +1,53 @@
-import Notificador from '../src/notificador'
-import Sensor from '../src/sensor';
-import { expect } from '@jest/globals';
+import Duenio from "../src/duenio";
+import Apagado from "../src/estados/Apagado";
+import Critico from "../src/estados/Critico";
+import EstadoReactor from "../src/estados/EstadoReactor";
+import GestorDeOperadores from "../src/gestorDeOperadores";
+import { Notificable } from "../src/notificable";
+import Operador from "../src/operador";
+import ReactorNuclear from "../src/reactor_nuclear/ReactorNuclear";
+import Sensor from "../src/sensor";
 
-describe('prueba de sensor', () => {
-    let notificador: Notificador = new Notificador();
-    let sensor: Sensor = new Sensor();
-    let moderada: number = 330;
-    let critica: number = 400;
-    let normal: number = 280;
-    
-    it('deberia suscribirse y desuscribirse', () => {
-        expect(sensor.suscribir(notificador)).toBeUndefined();
+describe("Sensor", () => {
+  let instance: Sensor;
+  let gestor: GestorDeOperadores;
+  let operador1: Operador;
+  let operador2: Operador;
+  let duenio: Duenio;
+  let estado: EstadoReactor;
+  let reactor: ReactorNuclear;
 
-        expect(sensor.desuscribir(notificador)).toBeUndefined();     
-    });
+  beforeEach(() => {
+    duenio = new Duenio("Burns");
+    operador1 = new Operador("Homero", duenio);
+    operador2 = new Operador("Bart", duenio);
+    gestor = new GestorDeOperadores([operador1, operador2]);
+    instance = new Sensor();
+    estado = new Critico();
+    reactor = new ReactorNuclear(estado, 400, [], duenio);
+  });
 
-    describe('resultados', () => {
-        beforeEach(() => {
-            sensor.suscribir(notificador);
-        });
+  it("deberia ser una instancia de Sensor", () => {
+    expect(instance instanceof Sensor).toBeTruthy();
+  });
 
-        //FIX
-        it('deberia devolver temperatura', () => {
-            sensor.actualizarTemperatura(normal)
-            expect(notificador.actualizar(sensor)).toBe(normal)
-        })
+  it("deberia notificar a uno de los operadores y este deberia manejar la situacion", () => {
+    instance.suscribir(gestor);
 
-        it('deberia tirar error de temperatura moderada', () => {
-            expect(() => {
-                sensor.actualizarTemperatura(moderada);
-                notificador.actualizar(sensor)
-            }).toThrowError(`La temperatura es de ${moderada}, la insercion de barras de control es recomendada.`);
-        });
+    reactor.cambiarEstado(estado);
+    instance.notificar(estado);
+    expect(reactor.getEstado() instanceof Apagado).toBeTruthy();
+  });
 
-        it('deberia tirar error de temperatura critica', () => {
-            
-            expect(() => {
-                sensor.actualizarTemperatura(critica);
-                notificador.actualizar(sensor)
-            }).toThrowError('La temperatura es CRITICA y el reactor DEBE apagarse.');
-        });
+  it("deberia asignar al gestor como observer", () => {
+    instance.suscribir(gestor);
+    expect(instance.getGestor()).toBe(gestor);
+  });
 
-    })
+  it("deberia iniciar la cadena para manejar la situacion", () => {
+    instance.suscribir(gestor);
+    reactor.cambiarEstado(estado);
+    instance.actualizarTemperatura(reactor);
+    expect(reactor.getEstado() instanceof Apagado).toBeTruthy();
+  });
 });

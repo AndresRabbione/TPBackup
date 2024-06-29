@@ -9,11 +9,11 @@ export default class BarraDeControl {
     return this._tiempoDeVidaUtil;
   }
 
-  private setTiempoDeVida(tiempoDeVida: number) {
-    this._tiempoDeVidaUtil = tiempoDeVida;
+  public bajarTiempoDeVida(decremento: number) {
+    this._tiempoDeVidaUtil -= decremento;
   }
 
   public calcularPorcentaje(): number {
-    return (this._tiempoDeVidaUtil / 3600) * 100;
+    return this._tiempoDeVidaUtil / 3600;
   }
 }

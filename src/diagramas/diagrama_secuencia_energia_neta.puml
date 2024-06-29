@@ -1,0 +1,40 @@
+@startuml 
+title Diagrama de secuencia: Energía neta producida en todo momento
+
+actor Cliente
+participant PlantaNuclear
+participant Sensor
+participant ReactorNuclear
+participant EstadoReactor
+participant EnergiaBaseConcreta
+participant EnergiaTiempoDecorator
+participant EnergiaCapacidadDecorator
+
+Cliente --> PlantaNuclear: Inicia la simulación
+PlantaNuclear -> Sensor: Mide la temperatura
+
+activate Sensor
+activate EstadoReactor
+Sensor -> EstadoReactor: Actualiza el estado y temperatura
+
+activate ReactorNuclear
+activate EnergiaBaseConcreta
+ReactorNuclear --> EnergiaBaseConcreta: calcularEnergiaNeta(temperatura)
+EnergiaBaseConcreta --> ReactorNuclear: Energía base calculada
+
+activate EnergiaTiempoDecorator
+ReactorNuclear --> PlantaNuclear: getHorasOperadas()
+PlantaNuclear --> ReactorNuclear: tiempo que el reactor lleva operando
+ReactorNuclear --> EnergiaTiempoDecorator: calcularEnergiaNeta(tiempo)
+EnergiaTiempoDecorator --> ReactorNuclear: Energía ajustada por tiempo operado
+
+
+activate EnergiaCapacidadDecorator
+ReactorNuclear -> EstadoReactor: getCapacidad()
+EstadoReactor -> ReactorNuclear: Retorna la capacidad actual
+ReactorNuclear --> EnergiaCapacidadDecorator: calcularEnergiaNeta(capacidad)
+EnergiaCapacidadDecorator --> ReactorNuclear: Energía ajustada por capacidad
+
+ReactorNuclear --> Cliente: Energía producida en el momento
+
+@enduml
