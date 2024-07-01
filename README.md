@@ -10,7 +10,7 @@ Este grupo está integrado por Dario Zagarzazu, Francesca Massollo, Claudia Cant
   - [Operacion](#operacion)
   - [Secuencia basica](#secuencia-basica)
 - [Instrucciones para compilacion](#instrucciones-para-compilación)
-  - [Preparando el entrono](#preparando-el-entorno)
+  - [Preparando el entorno](#preparando-el-entorno)
   - [Usar el entorno](#usar-el-entorno)
 - [Comandos utiles](#comandos-utiles)
 - [Dependencias](#dependencias)
@@ -25,11 +25,11 @@ La planta nuclear opera simulando el pasaje del tiempo y delegando la responsabi
 
 La planta tiene varios mecanismos que emplea para manejar su temperatura, utiliza barras de control y la habilidad de apagar el reactor en caso de emergencia.
 
-La temperatura y enrgia son reportadas en el momento con la habilidad de recibir un reporte de la energia total generada despues de una cierta cantidad de tiempo
+La temperatura y energia son reportadas en el momento con la habilidad de recibir un reporte de la energia total generada despues de una cierta cantidad de tiempo.
 
 ## Funcionamiento detallado
 
-_Esta seccion detalla paso a paso como se se construye la planta y se simula su operacion_
+_Esta seccion detalla paso a paso como se se construye la planta y se simula su operacion._
 
 ### Construccion
 
@@ -37,33 +37,33 @@ Los primeros objetos a construir son las barras de control, ya que son los mas s
 
 > `let barras: BarraDeControl[] = [new BarraDeControl(num1), new BarraDeControl(num2), ...];`
 
-El siguiente objeto es el duenio de la planta cuya una propiedad requerida es su nombre.
+El siguiente objeto es el dueño de la planta cuya unica propiedad requerida es su nombre.
 
 > `let duenio: Duenio = new Duenio("nombre");`
 
-El siguiente paso es armar los operadores, estos tienen un nombre y una referencia al duenio.
+El siguiente paso es armar los operadores, estos tienen un nombre y una referencia al dueño.
 
 > `let operadores: Operador[] = [new Operador("nombre1", duenio), new Operador("nombre2", duenio), ...];`
 
-Ahora falta construir un estado inicial para el reactor, aunque es recomendado que el estado generado sea del tipo apropiado para la temperatura ingresada la simulacion toma precauciones para corregir el estado si la temperatura no coincide.
+Ahora falta construir un estado inicial para el reactor, aunque es recomendado que el estado generado sea el apropiado para la temperatura ingresada, la simulacion toma precauciones para corregir el estado si la temperatura no coincide.
 
 > `let estadoInicial: EstadoReactor = new 'Estado'();`
 
-_Reeplaza 'Estado' por tu estado deseado_
+_Reeplaza 'Estado' por tu estado deseado._
 
-Como anteultimo paso debemos cosntruir al reactor, este requiere de un estado inicial, una temperatura, un array de barras de control y un duenio para asignar al reportador. Tambien automaticamente construye algunos componentes clave: los decoradores que calculan la energia generada, el sensor y el reportador.
+Como anteultimo paso debemos construir al reactor, este requiere de un estado inicial, una temperatura, un array de barras de control y un dueño para asignar al reportador. Tambien automaticamente construye algunos componentes clave: el calculador de energia y los decoradores que ajustan los resultados, el sensor y el reportador.
 
-_Estos componentes son explicados en mayor detalle en la siguiente seccion_
+_Estos componentes son explicados en mayor detalle en la siguiente seccion._
 
 > `let reactor: ReactorNuclear = new ReactorNuclear(estadoInicial, temperatura, barras, duenio);`
 
-_Aunque el duenio no es un componente del reactor, es requerido para construir al reportador_
+_Aunque el dueño no es un componente del reactor, es requerido para construir al reportador._
 
-Tambien en necesario llamar al metodo de cambiarEstado para asegurarnos de que el estado sea correctamente asignado
+Tambien en necesario llamar al metodo de **cambiarEstado** para asegurarnos de que el estado sea correctamente asignado.
 
 > `reactor.cambiarEstado(estadoInicial);`
 
-El ultimo objeto a construir es la planta nuclear cuyo constructor tiene 3 parametros: Un reactor, los operadores y el duenio. La planta tambien automaticamente inicializa sus contadores, el gestor de operadores y subscribe al gestor para que pueda ser notificado.
+El ultimo objeto a construir es la planta nuclear cuyo constructor tiene 3 parametros: Un reactor, los operadores y el dueño. La planta tambien automaticamente inicializa sus contadores, el gestor de operadores y subscribe al gestor para que pueda ser notificado.
 
 > `let plantaNuclear: PlantaNuclear = new PlantaNuclear(reactor, operadores, duenio);`
 
@@ -71,11 +71,12 @@ El ultimo objeto a construir es la planta nuclear cuyo constructor tiene 3 param
 
 #### Planta Nuclear
 
-El unico metodo que debe ser llamado para iniciar la operacion de la planta es iniciarSimulacion
+El unico metodo que debe ser llamado para iniciar la operacion de la planta es **iniciarSimulacion**.
 
 > `plantaNuclear.iniciarSimulacion(horasReporte, limite);`
 
-Los parametros necesarios son: la hora a realizar un reporte de la energia generada total hasta ese punto y un parametro opcional que fija un limite de cuantas horas se van a simular, si no se fija se utiliza un valor constante encontrado en el archivo constantes.ts.
+Los parametros necesarios son: la hora a realizar un reporte de la energia generada total hasta ese punto y un parametro opcional que fija un limite de cuantas horas se van a simular, si no se fija se utiliza un valor constante encontrado en el archivo constantes.ts.  
+_Ambos parametros son de tipo number._
 
 > `export const horasLimite = 10;`
 
@@ -85,25 +86,25 @@ Al iniciar la simulacion, esta llama al sensor encontrado dentro del reactor nuc
 
 _El detalle individual de estos procesos sera explicado mas abajo._
 
-Luego continua simulando la hora actual una cierta cantidad de minutos a la vez, actualmente 1, aumentando o disminuyendo la temperatura mientras va y repitiendo la secuencia de arriba.
+Luego continua simulando la hora actual minuto a minuto, aumentando o disminuyendo la temperatura mientras va y repitiendo la secuencia de arriba.
 
 Si se encuentra que la hora actual es igual a la hora pedida para el reporte, se envia un reporte con la energia total generada hasta ese momento.
 
-Si se llego al limite se llama al metodo de finalizarSimulacion y se envia otro reporte. De otra forma se llama a este metodo automaticamente, simulando otra hora hasta llegar al limite.
+Si se llego al limite se llama al metodo de finalizarSimulacion y se envia otro reporte. De otra forma se llama a **iniciarSimulacion** automaticamente, simulando otra hora hasta llegar al limite.
 
 > `plantaNuclear.finalizarSimulacion()`
 
 #### Reactor Nuclear
 
-El reactor se responsabiliza por llamar a sus componentes, principalmente al sensor cuando su temperatura cambia, junto con modificar su temperatura segun el estado actual.
+El reactor se responsabiliza por llamar a sus componentes, principalmente al sensor, cuando su temperatura cambia, junto con modificar su temperatura segun el estado actual.
 
-Al llamar el metodo de cambiarTemperatura este aumenta o disminuye la temperatura por una cierta cantidad dependiendo del estado actual y el tiepo transcurrido, pasado como parametro.
+Al llamar el metodo de **cambiarTemperatura** este aumenta o disminuye la temperatura por una cierta cantidad dependiendo del estado actual y el tiempo transcurrido, pasado como parametro. El tiempo es usado como parametro en el caso de que se quieran simular multiples minutos simultaneamente, aunque esto no es recomendado ya que puede llevar a posibles errores de calculo menores en la energia.
 
 > `reactor.cambiarTemperatura(tiempo);`
 
-_El cambio en la temperatura es un calculo realizado por el estado del reactor sobre una constante encontrada en constantes.ts_
+_El cambio en la temperatura es un calculo realizado por el estado del reactor sobre una constante encontrada en constantes.ts._
 
-Este metodo desencadena la secuencia definida al comienzo de la seccion de la planta nuclear mediante un metodo del sensor.
+Este metodo desencadena la secuencia definida al comienzo de la seccion de la planta nuclear mediante el siguiente metodo del sensor.
 
 > `reactor.sensor.actualizarTemperatura(reactor);`
 
@@ -113,38 +114,41 @@ El reactor tambien es capaz de obtener la energia generada en el momento segun l
 
 #### Sensor
 
-El sonsor opera como un patron **observer** donde, luego de asegurar que el estado sea correcto, notifica al gestor de operadores que se encarga de asignar tareas a los operadores.
+El sensor opera como un patron **observer** donde, luego de asegurar que el estado sea correcto, notifica al gestor de operadores que se encarga de asignar tareas a los operadores.
 
-> _En el metodo actualizarTemperatura()_ > `reactor.estado.checkEstado()` > `sensor.notificar(estado)`
+> _En el metodo **actualizarTemperatura**_  
+> `reactor.estado.checkEstado()`  
+> `sensor.notificar(estado)`
 
 #### Gestor de Operadores
 
-El gestor implementa un algoritmo Round Robin, donde cada operador tiene su turno para decidir que operador deberia manejar la situacion actual, aunque notifica a todos los operadores que ocurrio un cambio de todas formas.
+El gestor implementa un algoritmo Round Robin, donde cada operador tiene su turno para decidir que operador deberia manejar la situacion actual, aunque notifica a todos ellos que ocurrio un cambio de todas formas.
 
 > `gestor.notificarOperadores(estadoReactor)`
 
-_Opera con un orden secuencial en el array de operadores subscriptos._
+_El orden de asignacion es igual al orden del array._
 
 #### Estados
 
-Los estados son relativos a la temperatura actual del reactor con ciertos rangos de temperatura perteneciendo a algun estado. Cada estado define la capacidad del reactor de generar energia, el cambio de la temperatura por un minuto y como ese estado deberia ser manejado por los operadores.
+Los estados son relativos a la temperatura actual del reactor, con ciertos rangos de temperatura perteneciendo a algun estado. Cada estado define la capacidad del reactor de generar energia, el cambio de la temperatura en un minuto y como ese estado deberia ser manejado por los operadores.
 
 El reactor meneja 5 estados actualmente:  
-**Apagado:** Este estado no depende de alguna temperatura y previene encender el reactor si la temperatura se encuentra critica.  
-**Frio:** Este estado ocurre a cualquier temperatura menor a 280.  
-**Normal:** Este estado ocurren entre los 280 y 330 (no inclusive).  
-**Moderado:** Este estado ocurren entre los 330 y 400 (no inclusive).  
-**Critico:** Este estado ocurre a cualquier temperatura mayor a 400.
+**Apagado:** No depende de la temperatura y previene encender el reactor si la temperatura se encuentra critica.  
+**Frio:** Ocurre a cualquier temperatura menor a 280.  
+**Normal:** Ocurre entre los 280 y 330 (no inclusive).  
+**Moderado:** Ocurre entre los 330 y 400 (no inclusive).  
+**Critico:** Ocurre a cualquier temperatura mayor a 400.
 
-Las 3 maneras de manejar situacion son:  
+Las 3 maneras de manejar la situacion son:  
 **Nada:** No es necesario tomar accion, se envia un reporte y regresa a simular.  
 **Insertar barras de control:** Cuando la temperatura llega a los 330 es posible insertar barras de control que disminuyen la temperatura, estas barras son elegidas por el operador.  
-**Apagar el reactor:** Cuando la temperatura llega a un nivel critico se apaga el reactor a la fuerza.  
-_En todos los casos se envia un reporte sobre la situacion_
+**Apagar el reactor:** Cuando la temperatura llega a un nivel critico se apaga el reactor a la fuerza.
+
+_En todos los casos se envia un reporte sobre la situacion._
 
 #### Operador
 
-El operador esta a cargo de manejar la situacion y los procesos necesarios para eso. Esto incluye elegir, insertar y gastar barras.
+El operador esta a cargo de manejar la situacion. Para hacer esto tiene metodos que pueden elegir, insertar y gastar barras.
 
 Las barras son elegidas segun un algoritmo que intenta llegar a una temperatura considerada optima, definida en el archivo de constantes.
 
@@ -156,32 +160,33 @@ Las barras son el objeto mas simple, tienen un tiempo de vida util que disminuye
 
 #### Base de enregia
 
-La base de energia se usa para calcular la energia generada en el momento segun la temperatura actual, esta depende de **decoradores** que toman en cuenta el tiempo transcurrido y la capacidad actual del rector, derivada de el estado.  
+La base de energia se usa para calcular la energia generada en el momento segun la temperatura actual, esta depende de **decoradores** que toman en cuenta el tiempo transcurrido y la capacidad actual del rector, derivada del estado.  
 _Para la metodologia particular, leer los archivos encontrados en el directorio energia_
 
-#### Duenio
+#### Dueño
 
-El duenio no tiene muchas responsabilidades, es notificado cuando el reactor es apagado y recibe reportes de la situacion cuando cambia. Estas notificaciones son generalmente pasadas mediante el operador.
+El dueño no tiene muchas responsabilidades, es notificado cuando el reactor es apagado y recibe reportes de la situacion cuando cambia. Estas notificaciones son generalmente pasadas mediante el operador.
 
-> `duenio.recibirAlerta(estado, manejado);` > `duenio.recibirReporte(reporte);`
+> `duenio.recibirAlerta(estado, manejado);`  
+> `duenio.recibirReporte(reporte);`
 
 #### Reportes
 
 Hay 4 tipos de reporte:  
-**Reporte Regular:** Este reporte manda la medicion de temperatura mas reciente y la energia neta correspondiente.  
-**Reporte de barras:** Este reporte informa la cantidad de barras usadas cuando se manejo la situacion actual.  
-**Reporte de estados:** Este reporte informa la cantidad de veces que se estuvo en ciertos estados.  
-**Reporte Total:** Este reporte informa la energia total generada despues de una cierta cantidad de horas.
+**Reporte Regular:** Manda la medicion de temperatura mas reciente y la energia neta correspondiente.  
+**Reporte de barras:** Informa la cantidad de barras usadas cuando se manejo la situacion actual.  
+**Reporte de estados:** Informa la cantidad de veces que se estuvo en ciertos estados.  
+**Reporte Total:** Informa la energia total generada despues de una cierta cantidad de horas.
 
 #### Reportador
 
-El reportador se encarga de pasar los reportes ya armados a los agentes correctos mediante el metodo enviarReporte, junto con guardar algunos datos necesarios para el reporte.
+El reportador se encarga de pasar los reportes ya armados a los agentes correctos mediante el metodo **enviarReporte**, junto con guardar algunos datos necesarios para el reporte.
 
 > `reportador.enviarReporte(reporte);`
 
 ### Secuencia basica
 
-_Esta seccion detalla una secuencia del llamado de metodos empezando con una nueva simulacion. Esto ignora contexto para mostrar mas claramente a que objeto pertenece cada metodo, esto significa que casos donde cadenas como: reactor.sensor.algunMetodo() o la palabra this se reemplazan por simplemente llamar al metodo. Por la implementacion mas directa, leer los otros archivos_
+_Esta seccion detalla una secuencia del llamado de metodos empezando con una nueva simulacion. Esto ignora contexto para mostrar mas claramente a que objeto pertenece cada metodo, esto significa que casos donde cadenas como: reactor.sensor.algunMetodo() o la palabra this se reemplazan por simplemente llamar al metodo. Para la implementacion mas directa, leer los otros archivos_
 
 > `planta.iniciarSimulacion(horasReporte, limite);`  
 > `sensor.actualizarTemperatura(reactor);`  
@@ -205,7 +210,7 @@ _Para una lista de dependencias mas extensiva con links utiles, ve la seccion: [
 
 _Este paso puede ser saltado si estas leyendo esto despues de clonar el repositorio_
 
-El repositorio contiene todos los archivos necesarios incluyendo la configuracion para compilar. Si ya tenes [git](https://git-scm.com/) intstalado podes clonar el repositorio usando el siguiente comando dentro de la consola:
+El repositorio contiene todos los archivos necesarios incluyendo la configuracion para compilar. Si ya tenes [git](https://git-scm.com/) instalado podes clonar el repositorio usando el siguiente comando dentro de la consola:
 
 > git clone https://github.com/FrancescaMassollo/TP_PlantaNuclear
 
@@ -213,7 +218,7 @@ Alternativamente se puede copiar o descargar los archivos individualmente, mient
 
 **2. Descargar NodeJS, esto puede ser hecho desde el siguiente link: [Descargar Node](https://nodejs.org/en/download/package-manager).**
 
-Es recomendado usar el instalador encontado en la pestaña "Prebuilt Installer", pero cualquier metodo de instalacion funciona.
+Es recomendado usar el instalador encontrado en la pestaña "Prebuilt Installer", pero cualquier metodo de instalacion funciona.
 
 **3. Descargar npm**
 
@@ -223,7 +228,7 @@ En la consola usar el siguiente comando dentro del directorio donde copiaste los
 
 **4. Compilar**
 
-En la misma termianl o en otra en el mismo repositorio usar el comando:
+En la misma terminal o en otra en el mismo repositorio usar el comando:
 
 > npm run build
 
@@ -269,7 +274,7 @@ _Las dependencias relacionadas a pruebas (3-5) solo son consideradas necesarias 
 
 ### Recomendado
 
-_Estas dependencias son utiles si se desea modificar el codigo o tener un preview util de los diagramas pero el codigo y las pruebas funcionaran si no desea instalarlas._
+_Estas dependencias son utiles si se desea modificar el codigo o tener un preview util de los diagramas, pero el codigo y las pruebas funcionaran si no desea instalarlas._
 
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml)
