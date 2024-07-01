@@ -1,11 +1,11 @@
 import EstadoReactor from "./estados/EstadoReactor";
-import Operador from "./operador";
+import { Notificable } from "./notificable";
 
 export default class GestorDeOperadores {
-  private _operadores: Operador[];
+  private _operadores: Notificable[];
   private _indiceActual: number;
 
-  constructor(operadores: Operador[]) {
+  constructor(operadores: Notificable[]) {
     this._indiceActual = 0;
     this._operadores = operadores;
   }
@@ -21,16 +21,16 @@ export default class GestorDeOperadores {
     this._indiceActual = (this._indiceActual + 1) % this._operadores.length;
   }
 
-  public agregarOperador(operador: Operador) {
+  public agregarOperador(operador: Notificable) {
     this._operadores.push(operador);
   }
 
-  public sacarOperador(operador: Operador) {
+  public sacarOperador(operador: Notificable) {
     const index: number = this._operadores.indexOf(operador);
     this._operadores.splice(index, 1);
   }
 
-  public getOperadores(): Operador[] {
+  public getOperadores(): Notificable[] {
     return this._operadores;
   }
 }

@@ -233,32 +233,19 @@ class Sensor {
 
 'Relaciones
 PlantaNuclear *-down- ReactorNuclear
-PlantaNuclear *-down- GestorDeOperadores
-PlantaNuclear o-left- Operador
-PlantaNuclear o-left- Duenio
+PlantaNuclear *-- GestorDeOperadores
+PlantaNuclear o-up- Operador
+PlantaNuclear o-up- Duenio
 
-ReactorNuclear *-- EstadoReactor
-ReactorNuclear *-down- EnergiaBase
-ReactorNuclear *-down- Sensor
+ReactorNuclear *-down- EstadoReactor
+ReactorNuclear *-- EnergiaBase
+ReactorNuclear *-right- Sensor
 ReactorNuclear o-- BarraDeControl
-ReactorNuclear o-left- Reportador
+ReactorNuclear o-up- Reportador
 
-Duenio ..> Reporte
+GestorDeOperadores *-right- Operador
 
-GestorDeOperadores *-- Operador
-GestorDeOperadores ..> EstadoReactor
-
-Notificable ..> EstadoReactor
-
-Operador o-- Duenio
-Operador ..> BarraDeControl
-Operador .left.> ReactorNuclear
-Operador ..> EstadoReactor
-
-Reportador ..> Duenio
-Reportador .down.> Reporte
-
-Sensor ..> GestorDeOperadores
-Sensor ..> EstadoReactor
+Reportador .right.> Duenio
+Reportador ..> Reporte
 
 @enduml
