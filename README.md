@@ -4,7 +4,7 @@ Este grupo está integrado por Dario Zagarzazu, Francesca Massollo, Claudia Cant
 
 ## Tabla de contenidos
 
-- [Intoduccion](#introduccion)
+- [Introduccion](#introduccion)
 - [Funcionamiento detallado](#funcionamiento-detallado)
   - [Construccion](#construccion)
   - [Operacion](#operacion)
